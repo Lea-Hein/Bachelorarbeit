@@ -1,0 +1,41 @@
+import gzip
+
+def AnzahlBasen():
+
+	bed = open("ssSC_v5_2019_07_09.bed",'r')
+	line = "sequenziert"
+	sequenzierteBasen = 0
+
+	while line != "":
+		line = bed.readline()
+		if line == "":
+			break
+		data = line.split()
+		anfang = int(data[1])
+		ende = int(data[2])
+		Basen = ende - anfang
+		sequenzierteBasen = sequenzierteBasen + Basen
+	return(sequenzierteBasen)
+
+	bed.close()
+
+def AnzahlVarianten():
+	vcf = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
+	line2 = "variant"
+	v = 0
+
+	while line2 != "":
+		line2 = vcf.readline()			# Zeile für Zeile
+		if line2 == "":
+			break
+		if line2[0] != "#": 			# alle Varianten einlesen
+			v += 1				# Anzahl Varianten erhöhen
+	return(v)
+
+	vcf.close()
+
+def TMB():
+	print("TMB =",AnzahlVarianten()/AnzahlBasen())
+
+TMB()
+

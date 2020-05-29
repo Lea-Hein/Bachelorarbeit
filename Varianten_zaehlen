@@ -1,0 +1,30 @@
+import gzip
+import sys
+
+
+#file = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
+
+
+#line = "test"
+
+v = 0
+
+for line in sys.stdin:
+	if 'Exit' == line.rstrip():
+        	break
+	print(1)
+
+#while line != "":
+#	line = file.readline()
+	if line == "":
+		break
+	if line[0] != "#":
+		v = v + 1
+
+
+file.close()
+print(v)
+#print("Das vcf file enthält", v, "Varianten")
+
+
+

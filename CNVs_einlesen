@@ -1,0 +1,32 @@
+
+import csv
+
+def read_cnv():
+	cnv = 0
+	deletion = 0
+	amplification = 0
+	loh = 0
+	chromosom = ""
+
+	tsv = open("DX202588_01-DX202375_01_clincnv.tsv")
+	read_tsv = csv.reader(tsv, delimiter="\t")
+	for row in read_tsv:
+		if str(row)[2] != '#':
+			cnv = cnv + 1
+			chromosom = row[0]
+			if row[6] == "DEL":
+				deletion += 1
+			elif row[6] == "AMP":
+				amplification += 1
+			elif row[6] == "LOH":
+				loh += 1
+
+
+		
+	print(cnv, "Copy number variants:", deletion, "Deletions,", amplification, "Amplifications, ", loh, "Losses of heterozygosity",)
+#print(deletion, "Deletions")
+#print(amplification, "Amplifications")
+#print(loh, "Loss of heterozygosity")
+	tsv.close()
+
+read_cnv()
