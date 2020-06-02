@@ -1,5 +1,5 @@
 
-import csv
+import csv, sys
 
 def read_cnv():
 	cnv = 0
@@ -8,7 +8,8 @@ def read_cnv():
 	loh = 0
 	chromosom = ""
 
-	tsv = open("DX202588_01-DX202375_01_clincnv.tsv")
+	tsv = open(sys.argv[1])
+
 	read_tsv = csv.reader(tsv, delimiter="\t")
 	for row in read_tsv:
 		if str(row)[2] != '#':

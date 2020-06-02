@@ -1,8 +1,30 @@
 import gzip
-import csv
+import sys
+
+global vcf
+
+def einlesen():
+
+	file = sys.argv[1]
+	
+
+	if file[len(file)-2:len(file)] == "gz":
+		vcf = gzip.open(sys.argv[1], 'rt')
+#		print("Variante 1")
+	elif file[len(file)-3:len(file)] == "vcf":
+		vcf = open(sys.argv[1])
+#		print("Variante 2")
+	else:
+		vcf = ""
+		print("Falscher Dateityp")
+		
+
+	return vcf
+
+vcf = einlesen()
 
 
-vcf = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
+#vcf = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
 #file = open("DX202588_01-DX202375_01_var_annotated.vcf",'r')
 
 def tuple_in_float(f):
@@ -212,8 +234,8 @@ def vcflesen(file):
 			print("C_n:", cu_normal, "	", "C_t:", cu_tumor)
 			print("G_n:", gu_normal, "	", "G_t:", gu_tumor)
 			print("T_n:", tu_normal, "	", "T_t:", tu_tumor)
-			print("Allele Frequency:", allele_frequency)
-			print("Variant Allele Frequency", variant_allele_frequency, "\n")	
+#			print("Allele Frequency:", allele_frequency)
+			print("Variant Allele Frequency:", variant_allele_frequency, "\n")	
 
 
 
