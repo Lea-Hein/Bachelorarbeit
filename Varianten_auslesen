@@ -65,17 +65,19 @@ def vcflesen(file):
 	nonsynonymous = 0
 	variant = ""
 
-	au_tumor = 0	# "Number of 'A' alleles used in tiers 1,2"
-	cu_tumor = 0 	# "Number of 'C' alleles used in tiers 1,2"
-	gu_tumor = 0 	# "Number of 'G' alleles used in tiers 1,2"
-	tu_tumor = 0 	# "Number of 'T' alleles used in tiers 1,2"
-	
+
 	au_normal = 0	# "Number of 'A' alleles used in tiers 1,2"
 	cu_normal = 0	# "Number of 'C' alleles used in tiers 1,2"
 	gu_normal = 0 	# "Number of 'G' alleles used in tiers 1,2"
 	tu_normal = 0 	# "Number of 'T' alleles used in tiers 1,2"
 
+	au_tumor = 0	# "Number of 'A' alleles used in tiers 1,2"
+	cu_tumor = 0 	# "Number of 'C' alleles used in tiers 1,2"
+	gu_tumor = 0 	# "Number of 'G' alleles used in tiers 1,2"
+	tu_tumor = 0 	# "Number of 'T' alleles used in tiers 1,2"
+	
 	allele_frequency = 0
+	variant_allele_frequency = 0
 	
 
 	line = "variant"
@@ -99,10 +101,13 @@ def vcflesen(file):
 			
 
 			
+			normal = (data[9]).split(":") # getauscht, vorher: (data[10]).split(":")
+			tumor = (data[10]).split(":") # getauscht, vorher: (data[9]).split(":")
 			
-			tumor = tuple((data[9]).split(":"))
-			normal = (data[10]).split(":")
-			
+			au_normal = tuple(normal[0])
+			cu_normal = tuple(normal[2])
+			gu_normal = tuple(normal[8])
+			tu_normal = tuple(normal[15])
 
 
 			au_tumor = tuple(tumor[0])
@@ -110,10 +115,6 @@ def vcflesen(file):
 			gu_tumor = tuple(tumor[8])
 			tu_tumor = tuple(tumor[15])
 
-			au_normal = tuple(normal[0])
-			cu_normal = tuple(normal[2])
-			gu_normal = tuple(normal[8])
-			tu_normal = tuple(normal[15])
 
 
 #			for i in au_tumor:
@@ -141,13 +142,23 @@ def vcflesen(file):
 
 
 			if alt == 'A':
-				alt_number = au_normal
+				alt_number = au_tumor
 			if alt == 'C':
-				alt_number = cu_normal
+				alt_number = cu_tumor
 			if alt == 'G':
-				alt_number = gu_normal
+				alt_number = gu_tumor
 			if alt == 'T':
-				alt_number = tu_normal
+				alt_number = tu_tumor
+
+			if ref == 'A':
+				ref_number = au_normal
+			if ref == 'C':
+				ref_number = cu_normal
+			if ref == 'G':
+				ref_number = gu_normal
+			if ref == 'T':
+				ref_number = tu_normal
+
 
 
 			depth = info[0]
@@ -164,8 +175,10 @@ def vcflesen(file):
 
 			if isinstance(dp, str) or isinstance(alt_number, str):
 				allele_frequency = ""
+				variant_allele_frequency = ""
 			else:
-				allele_frequency = alt_number / dp
+				allele_frequency = ref_number / dp
+				variant_allele_frequency = alt_number / dp
 
 
 			
@@ -195,11 +208,12 @@ def vcflesen(file):
 			print(variant, ref, alt)
 			print(varianttype)
 			print(depth)
-			print("A_t:", au_tumor, "	", "A_n:", au_normal)
-			print("C_t:", cu_tumor, "	", "C_n:", cu_normal)
-			print("G_t:", gu_tumor, "	", "G_n:", gu_normal)
-			print("T_t:", tu_tumor, "	", "T_n:", tu_normal)
-			print("Allele Frequency:", allele_frequency, "\n")	
+			print("A_n:", au_normal, "	", "A_t:", au_tumor)
+			print("C_n:", cu_normal, "	", "C_t:", cu_tumor)
+			print("G_n:", gu_normal, "	", "G_t:", gu_tumor)
+			print("T_n:", tu_normal, "	", "T_t:", tu_tumor)
+			print("Allele Frequency:", allele_frequency)
+			print("Variant Allele Frequency", variant_allele_frequency, "\n")	
 
 
 
