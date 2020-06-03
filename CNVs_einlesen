@@ -7,6 +7,7 @@ def read_cnv():
 	amplification = 0
 	loh = 0
 	chromosom = ""
+	size = 0
 
 	tsv = open(sys.argv[1])
 
@@ -15,16 +16,23 @@ def read_cnv():
 		if str(row)[2] != '#':
 			cnv = cnv + 1
 			chromosom = row[0]
-			if row[6] == "DEL":
+			cnv_size = int(row[4])
+			state = row[6]
+
+			size = size + cnv_size
+			if state == "DEL":
 				deletion += 1
-			elif row[6] == "AMP":
+			elif state == "AMP":
 				amplification += 1
-			elif row[6] == "LOH":
+			elif state == "LOH":
 				loh += 1
 
 
-		
+	size_kb = size / 10000	
+	size_mb = size / 1000000
+	size_gb = size / 1000000000
 	print(cnv, "Copy number variants:", deletion, "Deletions,", amplification, "Amplifications, ", loh, "Losses of heterozygosity",)
+	print("Alle CNVs:", size, "Basen =", size_mb, "mb", size_gb, "gb")
 #print(deletion, "Deletions")
 #print(amplification, "Amplifications")
 #print(loh, "Loss of heterozygosity")
