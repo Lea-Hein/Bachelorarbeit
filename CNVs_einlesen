@@ -43,7 +43,7 @@ def read_cnv():
 	CNV_Last = size_gb / komplettes_Genom
 
 	print(cnv, "Copy number variants:", deletion, "Deletions,", amplification, "Amplifications, ", loh, "Losses of heterozygosity",)
-	print("Alle CNVs:", size, "Basen =", size_mb, "mb", size_gb, "gb")
+	print("Alle CNVs:", size, "Basen =", size_gb, "gb")
 	print("CNV Last:", CNV_Last)
 
 #print(deletion, "Deletions")
