@@ -17,6 +17,7 @@ def einlesen():
 	else:
 		vcf = ""
 		print("Falscher Dateityp")
+		sys.exit(0)
 		
 
 	return vcf

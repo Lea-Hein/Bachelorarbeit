@@ -8,8 +8,17 @@ def read_cnv():
 	loh = 0
 	chromosom = ""
 	size = 0
+	komplettes_Genom = 3.1 #GB, Zahl von ensemble, GRCh37: chromosome length total 3.1 Gb
 
-	tsv = open(sys.argv[1])
+	tsv = sys.argv[1]
+	
+	if tsv[len(tsv)-3:len(tsv)] == "tsv":
+		tsv = open(sys.argv[1])
+	else:
+		print("Falscher Dateityp")
+		sys.exit(0)
+
+
 
 	read_tsv = csv.reader(tsv, delimiter="\t")
 	for row in read_tsv:
@@ -31,8 +40,12 @@ def read_cnv():
 	size_kb = size / 10000	
 	size_mb = size / 1000000
 	size_gb = size / 1000000000
+	CNV_Last = size_gb / komplettes_Genom
+
 	print(cnv, "Copy number variants:", deletion, "Deletions,", amplification, "Amplifications, ", loh, "Losses of heterozygosity",)
 	print("Alle CNVs:", size, "Basen =", size_mb, "mb", size_gb, "gb")
+	print("CNV Last:", CNV_Last)
+
 #print(deletion, "Deletions")
 #print(amplification, "Amplifications")
 #print(loh, "Loss of heterozygosity")

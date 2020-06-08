@@ -14,7 +14,7 @@ bed = oeffnen()
 def einlesen():
 
 	file = sys.argv[1]
-	bed = open(sys.argv[2])
+	bed = sys.argv[2]
 	
 
 	if file[len(file)-2:len(file)] == "gz":
@@ -24,8 +24,16 @@ def einlesen():
 		vcf = open(sys.argv[1])
 #		print("Variante 2")
 	else:
-		vcf = ""
-		print("Falscher Dateityp")
+		print("Falscher Dateityp (Argument 1)")
+		sys.exit(0)
+		
+
+	if bed[len(bed)-3:len(bed)] == "bed":
+		bed = open(sys.argv[1])
+
+	else:
+		print("Falscher Dateityp (Argument 2)")
+		sys.exit(0)
 		
 
 	return vcf
