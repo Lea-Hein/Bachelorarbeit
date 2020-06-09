@@ -1,0 +1,53 @@
+
+import csv, sys
+
+def read_cnv():
+	cnv = 0
+	deletion = 0
+	amplification = 0
+	loh = 0
+	chromosom = ""
+	size = 0
+	complete_genome = 3.1 	# GRCh37: chromosome length total 3.1 Gb
+
+	tsv = sys.argv[1]
+	
+	if tsv[len(tsv)-3:len(tsv)] == "tsv":
+		tsv = open(sys.argv[1])
+	else:
+		print("incorrect file type")
+		sys.exit(0)
+
+
+
+	read_tsv = csv.reader(tsv, delimiter="\t")
+	for row in read_tsv:
+		if str(row)[2] != '#':
+			cnv = cnv + 1			# count number of CNVs
+			chromosom = row[0]
+			cnv_size = int(row[4])		# size of of the CNV
+
+			size = size + cnv_size		# count number of bases of all CNVS
+
+			state = row[6]			# state of the CNV: Deletion, AMplification, Loss of Heterozygosity
+			if state == "DEL":
+				deletion += 1
+			elif state == "AMP":
+				amplification += 1
+			elif state == "LOH":
+				loh += 1
+
+
+	size_kb = size / 10000	
+	size_mb = size / 1000000
+	size_gb = size / 1000000000
+	cnv_load = size_gb / complete_genome # percentage of the genome that is 'covered' with CNVs
+
+	print(cnv, "Copy number variants:", deletion, "Deletions,", amplification, "Amplifications, ", loh, "Losses of heterozygosity",)
+	print("size of all CNVs:", size, "bases =", size_gb, "gb")
+	print("CNV load:", cnv_load)
+
+
+	tsv.close()
+
+read_cnv()
