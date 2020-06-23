@@ -2,6 +2,7 @@ import gzip
 import sys
 
 global vcf
+global name
 
 def open_vcf():
 
@@ -28,6 +29,7 @@ vcf = open_vcf()
 def count_variants(x):
 
 	v = 0
+	name = str(sys.argv[1])
 
 	line = "variant"
 	while line != "":
@@ -38,6 +40,8 @@ def count_variants(x):
 			v = v + 1
 
 	print(v)
+	o = open("count_variants_output.txt", "w") 
+	o.write("The VCF file \"{}\" contains {} variants".format(name,v))
 
 
 count_variants(open_vcf())

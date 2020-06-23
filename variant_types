@@ -134,23 +134,47 @@ def read_vcf(file):
 def output(file):
 	read_vcf(vcf)
 	nonsynonymous = missense + frameshift + stop
-	print(v, "Variants:", snp, "SNPs,", deletion, "Deletions,", insertion, "Insertions")
+	name = str(sys.argv[1])
 
-	print("")
-	print(synonymous, "synonymous Variants")
-	print(nonsynonymous, "non-synonymous Variants: ", missense,"missense Variants,", frameshift, "frameshift Variants,", stop, "stop gained," ) 
-	print('')
-	print(intron, "intron Variants")
-	print(intergenic, "intergenic Variants") 
+	o = open("variant_types_output.txt", "w") 	
 
-	print(downstream, "downstream gene Variants")
-	print(three_prime, "3-prime UTR Variants")
-	print(upstream, "upstream gene Variants")
-	print(splice_intron, "splice region and intron Variants") 
-	print(intron_noncoding, "intron and non coding transcript Variants") 
-	print(five_prime, "5-prime UTR Variants") 
-	print(regulatory, "regulatory region Variants")
-	print(splicedonor, "splice donor variants") 
+	o.write('The vcf file \"{}\" contains {} Variants, including {} SNPs, {} Deletions, {} Insertions \n'.format(name, v, snp, deletion, insertion))
+	o.write('\n')
+	o.write('{} synonymous Variants\n'.format(synonymous))
+	o.write('{} nonsynonymous Variants: {} missense Variants, {} frameshift Variants, {} stop gained \n'.format(nonsynonymous, missense, frameshift, stop))
+	o.write('\n')
+	o.write('{} intron Variants\n'.format(intron))
+	o.write('{} intergenic Variants\n'.format(intergenic))
+	o.write('{} downstream gene Variants\n'.format(downstream))
+	o.write('{} 3-prime UTR Variants\n'.format(three_prime))
+	o.write('{} upstream gene Variants\n'.format(upstream))
+	o.write('{} splice region and intron Variants\n'.format(splice_intron))
+	o.write('{} intron and non coding transcript Variants\n'.format(intron_noncoding))
+	o.write('{} 5-prime UTR Variants\n'.format(five_prime))
+	o.write('{} regulatory region Variants\n'.format(regulatory))
+	o.write('{} splice donor variants\n'.format(splicedonor))
+	o.close()
+
+
+
+
+
+#	print(v, "Variants:", snp, "SNPs,", deletion, "Deletions,", insertion, "Insertions")
+
+#	print("")
+#	print(synonymous, "synonymous Variants")
+#	print(nonsynonymous, "non-synonymous Variants: ", missense,"missense Variants,", frameshift, "frameshift Variants,", stop, "stop gained," ) 
+#	print('')
+#	print(intron, "intron Variants")
+#	print(intergenic, "intergenic Variants") 
+#	print(downstream, "downstream gene Variants")
+#	print(three_prime, "3-prime UTR Variants")
+#	print(upstream, "upstream gene Variants")
+#	print(splice_intron, "splice region and intron Variants") 
+#	print(intron_noncoding, "intron and non coding transcript Variants") 
+#	print(five_prime, "5-prime UTR Variants") 
+#	print(regulatory, "regulatory region Variants")
+#	print(splicedonor, "splice donor variants") 
 
 
 

@@ -4,14 +4,14 @@ import gzip, sys
 global vcf
 global bed
 
-def oeffnen():
+def open_bed():
 	bed = open(sys.argv[2])
 	return bed
 
-bed = oeffnen()
+bed = open_bed()
 
 
-def einlesen():
+def read_files():
 
 	file = sys.argv[1]
 	bed = sys.argv[2]
@@ -19,12 +19,12 @@ def einlesen():
 
 	if file[len(file)-2:len(file)] == "gz":
 		vcf = gzip.open(sys.argv[1], 'rt')
-#		print("Variante 1")
+
 	elif file[len(file)-3:len(file)] == "vcf":
 		vcf = open(sys.argv[1])
-#		print("Variante 2")
+
 	else:
-		print("Falscher Dateityp (Argument 1)")
+		print("incorrect file type for the first argument")
 		sys.exit(0)
 		
 
@@ -32,51 +32,50 @@ def einlesen():
 		bed = open(sys.argv[1])
 
 	else:
-		print("Falscher Dateityp (Argument 2)")
+		print("incorrect file type for the second argument")
 		sys.exit(0)
 		
 
 	return vcf
 
-vcf = einlesen()
+vcf = read_files()
 
-
-def AnzahlBasen():
-
-#	bed = open("ssSC_v5_2019_07_09.bed",'r')
-	line = "sequenziert"
-	sequenzierteBasen = 0
+# count the number of sequenced bases
+def count_bases():
+	line = "sequenced"
+	sequenced_bases = 0
 
 	while line != "":
 		line = bed.readline()
 		if line == "":
 			break
 		data = line.split()
-		anfang = int(data[1])
-		ende = int(data[2])
-		Basen = ende - anfang
-		sequenzierteBasen = sequenzierteBasen + Basen
-	return(sequenzierteBasen)
+		start = int(data[1]) # sequence start
+		end = int(data[2]) # sequence end
+		bases = end - start # number of sequenced bases 
+		sequenced_bases = sequenced_bases + bases
+	return(sequenced_bases)
 
 	bed.close()
 
-def AnzahlVarianten():
-	#vcf = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
+# read in all variants,line by line
+def count_variants():
 	line2 = "variant"
 	v = 0
 
 	while line2 != "":
-		line2 = vcf.readline()			# Zeile für Zeile
+		line2 = vcf.readline()			
 		if line2 == "":
 			break
-		if line2[0] != "#": 			# alle Varianten einlesen
-			v += 1				# Anzahl Varianten erhöhen
+		if line2[0] != "#": 			
+			v += 1				
 	return(v)
 
 	vcf.close()
 
+# naive calculation of Tumor Mutational Burden TMB
 def TMB():
-	print("TMB =",AnzahlVarianten()/AnzahlBasen())
+	print("TMB =",count_variants()/count_bases())
 
 TMB()
 
