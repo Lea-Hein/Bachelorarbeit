@@ -37,6 +37,11 @@ def read_cnv():
 			elif state == "LOH":
 				loh += 1
 
+			genes = (row[13]).split(",")			# affected genes
+
+			print(genes)
+			print(state)
+
 
 	size_kb = size / 10000	
 	size_mb = size / 1000000
