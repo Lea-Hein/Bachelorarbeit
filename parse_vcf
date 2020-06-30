@@ -1,5 +1,6 @@
 import gzip
 import sys
+import Variant_types
 
 global vcf
 
@@ -69,20 +70,9 @@ def read_vcf(file):
 	global moderate
 	global low
 	global modifier
-	global cdkn2a
-	global pten
-	global smarcb1
-	global tbxt
-	global brca2
-	global nbn
-	global check2
-	global fancg
-	global rad51b
-	global rpa1
-	global brca1
-	global hrgenes
-	global genes
-	global genes2
+	global hrgenes_list
+	global gene_list
+
 
 
 	v = 0
@@ -109,21 +99,14 @@ def read_vcf(file):
 	moderate = 0
 	low = 0
 	modifier = 0
-	cdkn2a = 0
-	pten = 0
-	smarcb1 = 0
-	tbxt = 0
-	brca2 = 0
-	nbn = 0
-	check2 = 0
-	fancg = 0
-	rad51b = 0
-	rpa1 = 0
-	brca1 = 0
-#	hrgenes = [atm, brca1, brca2, check2, ercc3, fanca, hdac2, mlh3, mre11, nbn, palb2, rad51, atr, ercc6, fancc, fancg, fancd2, pten, rad18, rad51B, rad54l, rpa1, xrcc3]
 
-	genes = []
-	genes2 = []
+#	hrgenes_list = [["ATM", 0], ["BRCA1", 0], ["BRCA2", 0], ["CHECK2", 0], ["ERCC3", 0], ["FANCA", 0], ["HDAC2", 0], ["MLH3", 0], ["MRE11", 0], ["NBN", 0], ["PALB2", 0], ["RAD51", 0], ["ATR", 0], ["ERCC6", 0], ["FANCC", 0], ["FANCG", 0], ["FANCD2", 0], ["PTEN", 0], ["RAD18", 0],["RAD51B", 0], ["Rd54l", 0], ["RPA1", 0], ["XRCC3", 0]]
+
+	hrgenes_list = [["ATM", 0,], ["BRCA1", 0,], ["BRCA2", 0,], ["CHECK2", 0,], ["ERCC3", 0,], ["FANCA", 0,], ["HDAC2", 0,], ["MLH3", 0,], ["MRE11", 0,], ["NBN", 0,], ["PALB2", 0,], ["RAD51", 0,], ["ATR", 0,], ["ERCC6", 0,], ["FANCC", 0,], ["FANCG", 0,], ["FANCD2", 0,], ["PTEN", 0,], ["RAD18", 0,],["RAD51B", 0,], ["Rd54l", 0,], ["RPA1", 0,], ["XRCC3", 0,]]
+
+	gene_list = [["ATM", 0], ["BRCA1", 0], ["BRCA2", 0], ["CHECK2", 0], ["ERCC3", 0], ["FANCA", 0], ["HDAC2", 0], ["MLH3", 0], ["MRE11", 0], ["NBN", 0], ["PALB2", 0], ["RAD51", 0], ["ATR", 0], ["ERCC6", 0], ["FANCC", 0], ["FANCG", 0], ["FANCD2", 0], ["PTEN", 0], ["RAD18", 0],["RAD51B", 0], ["Rd54l", 0], ["RPA1", 0], ["XRCC3", 0]]
+
+#	gene_list = [["ATM", 0,[]], ["BRCA1", 0,[]], ["BRCA2", 0,[]], ["CHECK2", 0,[]], ["ERCC3", 0,[]], ["FANCA", 0,[]], ["HDAC2", 0,[]], ["MLH3", 0,[]], ["MRE11", 0,[]], ["NBN", 0,[]], ["PALB2", 0,[]], ["RAD51", 0,[]], ["ATR", 0,[]], ["ERCC6", 0,[]], ["FANCC", 0,[]], ["FANCG", 0,[]], ["FANCD2", 0,[]], ["PTEN", 0,[]], ["RAD18", 0,[]],["RAD51B", 0,[]], ["Rd54l", 0,[]], ["RPA1", 0,[]], ["XRCC3", 0,[]]]
 
 	au_normal = 0	# "Number of 'A' alleles used in tiers 1,2"
 	cu_normal = 0	# "Number of 'C' alleles used in tiers 1,2"
@@ -259,44 +242,39 @@ def read_vcf(file):
 			if impact == "MODIFIER":	# counting variant number that has a MODIFIER impact
 				modifier += 1			
 
-			if genes.count(gene) == 0:
-				genes2.append(gene)
-			genes.append(gene)
 
-			# counting, if homologues recombination genes CDKN2A, PTEN, SMARCB1, TBXT are affected of mutations
+			for gene_info in hrgenes_list:						# is affected gene a homolougous recombination gene?
+				for gene_name in gene_info:
+					if gene == gene_name:
+						i_tupel = hrgenes_list.index(gene_info)
+						i_name = 0
+						i_count = 1
+						i_type = 2
+						
+						hrgenes_list[i_tupel][i_count] += 1
+						info = hrgenes_list[i_tupel]
+						info.append([varianttype, impact])
+						#info.append(impact)
+						
 
-			if gene == "CDKN2A":	
-				cdkn2a += 1			
+			count = 0
+			for gene_info in gene_list:
+				gene_name = gene_info[0]
+				
+				if gene == gene_name:
+					i_tupel = gene_list.index(gene_info)
+					i_count = 1
+					i_type = 2
+					gene_list[i_tupel][i_count] += 1
+					count += 1
+					info = gene_list[i_tupel]
+					info.append([varianttype, impact])
+					#info.append(impact)
+			if count == 0 and gene != '':				
+				gene_list.append([gene,1, [varianttype, impact]])
+			
 
-			if gene == "PTEN":	
-				pten += 1			
 
-			if gene == "SMARCB1":	
-				smarcb1 += 1			
-
-			if gene == "TBXT":	
-				tbxt += 1
-
-			if gene == "BRCA2":
-				brca2 += 1	
-
-			if gene == "NBN":	
-				nbn += 1
-
-			if gene == "CHECK2":	
-				check2 += 1
-
-			if gene == "FANCG":	
-				fancg += 1
-
-			if gene == "RAD51B":	
-				rad51b += 1
-
-			if gene == "RPA1":	
-				rpa1 += 1
-
-			if gene == "BRCA1":
-				brca1 += 1
 				
 
 
@@ -312,8 +290,7 @@ def read_vcf(file):
 #			print("Allele Frequency:", allele_frequency)
 			print("Variant Allele Frequency:", variant_allele_frequency, "\n", "impact: ", impact)	
 			print(gene, "\n")
-			print("Länge", len(CSQ))
-			print(CSQ, "\n")
+
 
 			# count the different types of variants
 			if varianttype == "synonymous_variant":
@@ -374,6 +351,85 @@ def output(file):
 	o.write('{} 5-prime UTR Variants\n'.format(five_prime))
 	o.write('{} regulatory region Variants\n'.format(regulatory))
 	o.write('{} splice donor variants\n'.format(splicedonor))
+	o.write('\n')
+
+	# output of the variations in homologous recombination genes
+	o.write('Variations in homologous recombination genes\n\n'.format())
+	for gene_info in hrgenes_list:
+		gene_count = gene_info[1]
+		# output only printed if there are variants:	
+		if gene_count > 0:
+			gene_name = gene_info[0]
+			# for only 1 variant per gene:
+			if gene_count == 1:
+				variant = gene_info[2]
+				vtype = variant[0]
+				vimpact = variant [1]
+				o.write('{}:	{} Mutation:	{}	impact: {} \n'.format(gene_name, gene_count, vtype, vimpact))
+			# for more than one variants per gene: 
+			if gene_count >= 2:
+				variant = gene_info[2]
+				vtype = variant[0]
+				vimpact = variant[1]
+				o.write('{}:	{} Mutations:'.format(gene_name, gene_count)) 
+				o.write('	{}	impact: {}\n'.format(vtype, vimpact))
+				for i in range(3,len(gene_info)):
+					variant = gene_info[i]
+					vtype = variant[0]
+					vimpact = variant[1]
+					o.write('			{}	impact: {}'.format(vtype, vimpact))
+				o.write('\n')
+		
+	o.write('\n')
+	# output of the genes with variations
+	o.write('Genes that are affected of Variations\n\n')
+	for gene_info in gene_list:
+		gene_count = gene_info[1]
+		# output, if the gene has at least one variant	
+		if gene_count > 0:
+			gene_name = gene_info[0]
+			# for genes with short name (formatting)	
+			if len(gene_name) < 7:
+				variant = gene_info[2]
+				vtype = variant[0]
+				vimpact = variant [1]
+				#for genes with only one variant
+				if gene_count == 1:
+
+					o.write('{}:		{} Mutation:	{}	impact: {} \n'.format(gene_name, gene_count, vtype, vimpact))
+				
+				# for genes with more than one variant
+				if gene_count >= 2:
+					o.write('{}:		{} Mutations:	'.format(gene_name, gene_count)) 
+					o.write('{}	impact: {}	\n'.format(vtype, vimpact))
+					for i in range(3,len(gene_info)):
+						variant = gene_info[i]
+						vtype = variant[0]
+						vimpact = variant[1]
+						o.write('				{}	impact: {}	\n'.format(vtype, vimpact))
+					o.write('\n')
+	
+			# for genes with longer name (formatting)
+			if len(gene_name) > 6:
+				variant = gene_info[2]
+				vtype = variant[0]
+				vimpact = variant [1]
+				#for genes with only one variant
+				if gene_count == 1:
+	
+					o.write('{}:	{} Mutation:	{}	impact: {} \n'.format(gene_name, gene_count, vtype, vimpact))
+				# for genes with more than one variant
+				if gene_count >= 2:
+					o.write('{}:	{} Mutations:	'.format(gene_name, gene_count))
+					o.write('{}	impact: {}	\n'.format(vtype, vimpact))
+					for i in range(3,len(gene_info)):
+						variant = gene_info[i]
+						vtype = variant[0]
+						vimpact = variant[1]
+						o.write('				{}	impact: {}	\n'.format(vtype, vimpact))
+					o.write('\n')
+
+
 	o.close()
 
 
@@ -385,7 +441,6 @@ def output(file):
 	print(low, "variants with low impact") 
 	print(modifier, "variants with modifier impact") 
 
-	print("variants in hrd genes:", "CDKN2A:", cdkn2a, "PTEN:", pten, "SMARCB1:", smarcb1, "TBXT:", tbxt, "BRCA1:",brca1, "BRCA2:", brca2, "NBN:", nbn, "CHECK2:", check2, "FANCG:", fancg, "RAD51B:", rad51b, "RPA1:", rpa1)
 
 
 	print("")
@@ -405,12 +460,10 @@ def output(file):
 	print(splicedonor, "splice donor variants") 
 	print("")
 
+
 	print("The output is stored in ", "'parse_vcf_output.txt'")
-	print(genes)
-	print(len(genes))
-	print(genes2)
-	print(len(genes2))
-#	print(hrgenes)
+
+	print(Variant_types.feature_fusion.vtype)
 
 output(vcf)
 
