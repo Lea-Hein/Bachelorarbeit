@@ -45,7 +45,6 @@ def read_cnv():
 		reihe += 1
 		
 		if str(row)[2] != '#':
-			print(row, "\n")
 			cnv = cnv + 1			# count number of CNVs
 			chromosom = row[0]
 			cnv_size = int(row[4])		# size of of the CNV
@@ -111,9 +110,6 @@ def output():
 	print("\n")
 	o.write("\n")
 
-	print("resistance_genes:  \n")
-
-	print(resistance_genes_list)
 	o.write("resistance genes: \n")
 	o.write("\n")
 	for gene_info in resistance_genes_list:
@@ -126,8 +122,7 @@ def output():
 
 	print("\n")
 	o.write("\n")
-	print("hrgenes:\n")
-	print(hrgenes_list)
+
 	o.write("homologous recombination genes: \n")
 	o.write("\n")
 	for gene_info in hrgenes_list:
