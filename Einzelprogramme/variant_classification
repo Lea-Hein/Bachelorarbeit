@@ -1,0 +1,205 @@
+import gzip, sys
+
+global vcf
+
+def open_vcf():
+
+	file = sys.argv[1]
+	
+
+	if file[len(file)-2:len(file)] == "gz":
+		vcf = gzip.open(sys.argv[1], 'rt')
+
+	elif file[len(file)-3:len(file)] == "vcf":
+		vcf = open(sys.argv[1])
+
+	else:
+		print("incorrect type file")
+		sys.exit(0)
+		
+
+	return vcf
+
+vcf = open_vcf()
+
+#vcf = gzip.open("DX202588_01-DX202375_01_var_annotated.vcf.gz", 'rt')
+#file = open("DX202588_01-DX202375_01_var_annotated.vcf",'r')
+
+def read_vcf(file):
+	global line
+	global v
+	global snp
+	global deletion
+	global insertion
+	global synonymous
+	global missense
+	global intron
+	global intergenic
+	global regulatory
+	global downstream
+	global upstream
+	global three_prime
+	global splice_intron
+	global intron_noncoding
+	global frameshift
+	global five_prime
+	global stop
+	global splicedonor
+
+	
+	
+	v = 0
+	snp = 0
+	deletion = 0
+	insertion = 0
+	synonymous = 0
+	missense = 0
+	intron = 0
+	intergenic = 0
+	regulatory = 0
+	downstream = 0
+	upstream = 0
+	three_prime = 0
+	splice_intron = 0
+	intron_noncoding = 0
+	frameshift = 0
+	five_prime = 0
+	stop = 0
+	splicedonor = 0
+	nonsynonymous = 0
+
+
+
+	line = "variant"
+	while line != "":
+		line = vcf.readline()				# read line by line
+		if line == "":
+			break
+		if line[0] != "#": 				# read in all lines except the header -> read in all variants
+			v += 1					# counting the number of variants
+		
+			data = line.split()			# splitt the lines to analyse the information for each variant untersuchen
+
+			# comparison of reference and alternating allele and assignment of the type of variant: snp, deletion or insertion
+			if len(data[3]) == len(data[4]):	# character length equal -> SNP
+				snp += 1			
+			elif len(data[3]) > len(data[4]):	# higher character length of the reference -> Deletion
+				deletion += 1		
+			elif len(data[3]) < len(data[4]):	# higher character length of the alternating allele -> Insertion
+				insertion += 1	
+
+
+			info = str(data[7]).split(";")		# split the 8. clolumn -> contains additional information for each variant
+
+			CSQ = str(info[14]).split("|")		# Consequences of the INFO field
+
+			varianttype = CSQ[1]			# Variant types of the Consequences
+		
+
+			# count the different types of variants
+			if varianttype == "synonymous_variant":
+				synonymous += 1
+			elif varianttype == "missense_variant":
+				missense += 1
+			elif varianttype == "intron_variant":
+				intron += 1
+			elif varianttype == "intergenic_variant":
+				intergenic += 1
+			elif varianttype == "regulatory_region_variant":
+				regulatory += 1
+			elif varianttype == "downstream_gene_variant":
+				downstream += 1
+			elif varianttype == "upstream_gene_variant":
+				upstream += 1
+			elif varianttype == "splice_region_variant&intron_variant":
+				splice_intron += 1
+			elif varianttype == "3_prime_UTR_variant":
+				three_prime += 1
+			elif varianttype == "intron_variant&non_coding_transcript_variant":
+				intron_noncoding += 1
+			elif varianttype == "frameshift_variant":
+				frameshift += 1
+			elif varianttype == "splice_donor_variant":
+				splicedonor += 1
+			elif varianttype == "5_prime_UTR_variant":
+				five_prime += 1
+			elif varianttype == "stop_gained":
+				stop += 1
+	return (v, snp, deletion, insertion, synonymous, missense, intron, intergenic, regulatory, downstream, upstream, three_prime, splice_intron, intron_noncoding, frameshift, five_prime, stop, splicedonor)
+		
+
+
+
+
+def output(file):
+	read_vcf(vcf)
+	nonsynonymous = missense + frameshift + stop
+	name = str(sys.argv[1])
+
+	o = open("variant_types_output.txt", "w") 	
+
+	o.write('The vcf file \"{}\" contains {} Variants, including {} SNPs, {} Deletions, {} Insertions \n'.format(name, v, snp, deletion, insertion))
+	o.write('\n')
+	o.write('{} synonymous Variants\n'.format(synonymous))
+	o.write('{} nonsynonymous Variants: {} missense Variants, {} frameshift Variants, {} stop gained \n'.format(nonsynonymous, missense, frameshift, stop))
+	o.write('\n')
+	o.write('{} intron Variants\n'.format(intron))
+	o.write('{} intergenic Variants\n'.format(intergenic))
+	o.write('{} downstream gene Variants\n'.format(downstream))
+	o.write('{} 3-prime UTR Variants\n'.format(three_prime))
+	o.write('{} upstream gene Variants\n'.format(upstream))
+	o.write('{} splice region and intron Variants\n'.format(splice_intron))
+	o.write('{} intron and non coding transcript Variants\n'.format(intron_noncoding))
+	o.write('{} 5-prime UTR Variants\n'.format(five_prime))
+	o.write('{} regulatory region Variants\n'.format(regulatory))
+	o.write('{} splice donor variants\n'.format(splicedonor))
+	o.close()
+
+
+
+
+
+#	print(v, "Variants:", snp, "SNPs,", deletion, "Deletions,", insertion, "Insertions")
+
+#	print("")
+#	print(synonymous, "synonymous Variants")
+#	print(nonsynonymous, "non-synonymous Variants: ", missense,"missense Variants,", frameshift, "frameshift Variants,", stop, "stop gained," ) 
+#	print('')
+#	print(intron, "intron Variants")
+#	print(intergenic, "intergenic Variants") 
+#	print(downstream, "downstream gene Variants")
+#	print(three_prime, "3-prime UTR Variants")
+#	print(upstream, "upstream gene Variants")
+#	print(splice_intron, "splice region and intron Variants") 
+#	print(intron_noncoding, "intron and non coding transcript Variants") 
+#	print(five_prime, "5-prime UTR Variants") 
+#	print(regulatory, "regulatory region Variants")
+#	print(splicedonor, "splice donor variants") 
+
+
+
+#273 Variants
+#259 SNPs
+#8 Deletions
+#6 Insertions
+
+#145 intron Variants
+#48 intergenic Variants
+#25 missense Variants
+#18 synonymous Variants
+#9 downstream gene Variants
+#9 3-prime UTR Variants
+#6 upstream gene Variants
+#3 splice region and intron Variants
+#3 intron and non coding transcript Variants
+#2 stop gained
+#2 5-prime UTR Variants
+#1 frameshift Variants
+#1 regulatory region Variants
+#1 splice donor variants
+
+
+output(vcf)
+
+vcf.close()
+
