@@ -746,7 +746,7 @@ def output(file): # output of the analysis
 	print("")
 
 
-	print("The output is stored in ", "'Output / Annotation_output.txt'")
+	print("The output is stored in ", "'Analyse_Output / Annotation_output.txt'")
 
 
 	
