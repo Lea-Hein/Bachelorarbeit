@@ -83,7 +83,7 @@ v = count_variants()
 def TMB():
 	#print("TMB =",count_variants()/count_bases())
 	print("TMB = ", v/sequenced_bases)
-	print("3")
+
 bed.close()
 vcf.close()
-print("4")
+
