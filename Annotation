@@ -457,7 +457,9 @@ def output(file): # output of the analysis
 	cnv_load = size_gb / complete_genome # percentage of the genome that is 'covered' with CNVs
 	nonsynonymous = missense + frameshift + stop
 
-	o = open("Output/Annotation_output.txt", "w") 	
+	#o = open("Output/Annotation_output.txt", "w") 
+	o = open("Output/{}_Output_Annotation.txt".format(name_sample), "w")
+	
 
 	o.write('Analysis of the files \"{}\" and \"{}\"\n'.format(name_vcf, name_tsv))
 	#o.write('\033[1m' + "TEST")
@@ -749,13 +751,7 @@ def output(file): # output of the analysis
 	print("")
 
 
-	print("The output is stored in ", "'Output / Annotation_output.txt'")
-	
-	print("")
-	print(name_vcf)
-	print(name_sample)
-
-	
+	print("The output is stored in ", "'Output/{}_Output_Annotation.txt'".format(name_sample))
 
 
 	
