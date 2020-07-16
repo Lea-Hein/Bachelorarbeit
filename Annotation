@@ -499,9 +499,9 @@ def output(file): # output of the analysis
 	o.write("\n\n")
 	# output of the variations in homologous recombination genes
 	o.write('Variations in homologous recombination genes\n\n'.format())
-	print(hrgenes_list)
+
 	for gene_info in hrgenes_list:
-		print(gene_info)
+
 		gene_count = gene_info[1]
 		# output only printed if there are variants:	
 		if gene_count > 0:
@@ -535,7 +535,7 @@ def output(file): # output of the analysis
 
 			for i in range(3,len(gene_info)):
 				variant = gene_info[i]
-				print(variant)
+
 				vtype = variant[0]
 				vimpact = variant[1]
 #					vbiotype = variant[2]
