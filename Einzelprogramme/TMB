@@ -5,6 +5,8 @@ global vcf
 global bed
 global v
 v = 0
+global sequenced_bases
+sequenced_bases = 0
 
 def open_bed():
 	bed = open(sys.argv[2])
@@ -13,11 +15,10 @@ def open_bed():
 bed = open_bed()
 
 
-def read_files():
+def open_vcf():
 
 	file = sys.argv[1]
-	bed = sys.argv[2]
-	
+	bedfile = sys.argv[2]
 
 	if file[len(file)-2:len(file)] == "gz":
 		vcf = gzip.open(sys.argv[1], 'rt')
@@ -27,26 +28,28 @@ def read_files():
 
 	else:
 		print("incorrect file type for the first argument")
+		vcf = ""
 		sys.exit(0)
 		
 
-	if bed[len(bed)-3:len(bed)] == "bed":
-		bed = open(sys.argv[1])
+#	if bedfile[len(bedfile)-3:len(bedfile)] == "bed":
+#		bed = open(sys.argv[1])
 
-	else:
-		print("incorrect file type for the second argument")
-		sys.exit(0)
+#	else:
+#		print("incorrect file type for the second argument")
+#		bed = ""
+#		sys.exit(0)
 		
 
 	return vcf
 
-vcf = read_files()
+vcf = open_vcf()
 
 # count the number of sequenced bases
 def count_bases():
 	line = "sequenced"
-	sequenced_bases = 0
-
+	#sequenced_bases = 0
+	#line = bed.readline()
 	while line != "":
 		line = bed.readline()
 		if line == "":
@@ -61,10 +64,11 @@ def count_bases():
 	#	print("bases", bases)
 	#	print("sequenced", sequenced_bases)
 	#	print()
+	#sequenced_bases = 2
 	return(sequenced_bases)
 
-	bed.close()
-print(count_bases())
+#	bed.close()
+print("count",count_bases())
 
 # read in all variants,line by line
 def count_variants():
@@ -82,15 +86,18 @@ def count_variants():
 	print("v", v)				
 	return(v)
 
-	vcf.close()
+#	vcf.close()
 
-count_variants()
+#count_variants()
+
+print(count_variants()/count_bases())
 
 # naive calculation of Tumor Mutational Burden TMB
-#def TMB():
-	#TMB = count_variants()/count_bases()
+def TMB():
+	TMB = count_variants()/count_bases()
 	#print(TMB)
-	#print("TMB ="count_variants()/count_bases())
+	print("TMB =", TMB) #count_variants()/count_bases())
 
 #TMB()
-
+vcf.close()
+bed.close()
