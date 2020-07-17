@@ -3,13 +3,21 @@ import gzip, sys
 
 global vcf
 global bed
-global v
+#global v
 v = 0
-global sequenced_bases
+#global sequenced_bases
 sequenced_bases = 0
 
 def open_bed():
-	bed = open(sys.argv[2])
+	bedfile = sys.argv[2]
+
+	if bedfile[len(bedfile)-3:len(bedfile)] == "bed":
+		bed = open(sys.argv[2])
+
+	else:
+		print("incorrect file type for the second argument")
+		bed = ""
+		sys.exit(0)
 	return bed
 
 bed = open_bed()
@@ -18,7 +26,7 @@ bed = open_bed()
 def open_vcf():
 
 	file = sys.argv[1]
-	bedfile = sys.argv[2]
+	#bedfile = sys.argv[2]
 
 	if file[len(file)-2:len(file)] == "gz":
 		vcf = gzip.open(sys.argv[1], 'rt')
@@ -32,13 +40,6 @@ def open_vcf():
 		sys.exit(0)
 		
 
-#	if bedfile[len(bedfile)-3:len(bedfile)] == "bed":
-#		bed = open(sys.argv[1])
-
-#	else:
-#		print("incorrect file type for the second argument")
-#		bed = ""
-#		sys.exit(0)
 		
 
 	return vcf
@@ -48,6 +49,7 @@ vcf = open_vcf()
 # count the number of sequenced bases
 def count_bases():
 	line = "sequenced"
+	global sequenced_bases
 	#sequenced_bases = 0
 	#line = bed.readline()
 	while line != "":
@@ -56,15 +58,12 @@ def count_bases():
 			break
 		data = line.split()
 		start = int(data[1]) # sequence start
-	#	print("start", start)
+
 		end = int(data[2]) # sequence end
-	#	print("end", end)
+
 		bases = end - start # number of sequenced bases 
 		sequenced_bases = sequenced_bases + bases
-	#	print("bases", bases)
-	#	print("sequenced", sequenced_bases)
-	#	print()
-	#sequenced_bases = 2
+
 	return(sequenced_bases)
 
 #	bed.close()
@@ -72,7 +71,7 @@ print("count",count_bases())
 
 # read in all variants,line by line
 def count_variants():
-	v = 0
+	global v
 	line2 = "variant"
 
 	while line2 != "":
