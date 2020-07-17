@@ -63,7 +63,7 @@ def count_bases():
 
 		bases = end - start # number of sequenced bases 
 		sequenced_bases = sequenced_bases + bases
-	print("sequenced: ", sequenced_bases)
+#	print("sequenced: ", sequenced_bases)
 	return(sequenced_bases)
 
 
@@ -83,32 +83,29 @@ def count_variants():
 			v += 1
 	#print()
 
-	print("v", v)				
+#	print("v", v)				
 	return(v)
 
 #	vcf.close()
 
 #count_variants()
 
-print("variants",count_variants(), "bases", count_bases())
-print("v", v, "bases", sequenced_bases)
-print("ergebnis")
-print(v/sequenced_bases)
-i = v / sequenced_bases
-print("i", i)
+#Test ob es funktioniert: -> hat nur mit explizitem Aufruf von Python3 funktioniert, sonstgibt es als Ergebnis 0 aus
+
+#print("variants",count_variants(), "bases", count_bases())
+#print("v", v, "bases", sequenced_bases)
+#print("ergebnis")
+#print(v/sequenced_bases)
+#i = v / sequenced_bases
+#print("i", i)
 #print(count_variants() / count_bases())
-print(6/2)
-x = 10
-z = 5
-y = x/z
-print(y)
 
 # naive calculation of Tumor Mutational Burden TMB
 def TMB():
 	TMB = count_variants()/count_bases()
-	print(TMB)
-	TMB = v / sequenced_bases
-	print(TMB)
+#	print(TMB)
+#	TMB = v / sequenced_bases
+#	print(TMB)
 	print("TMB =", TMB) #count_variants()/count_bases())
 
 TMB()
