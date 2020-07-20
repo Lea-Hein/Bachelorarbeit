@@ -204,21 +204,33 @@ def read_vcf(file):	# analysis of the vcf file
 				ref_number = gu_normal
 			if ref == 'T':
 				ref_number = tu_normal
-
-
-			CSQ = str(info[13]).split("|")		# Consequences of the INFO field, on thirteenth place, if read depth is not available on fourteenth place
 			
+			dp = ''
+			depth = ''
+			for i in info:
 
+				if i.startswith('CSQ='):
+					#print(i) 
+					CSQ = str(i).split("|")		# Consequences of the INFO field, on thirteenth place, if read depth is not available on fourteenth place
+					#print("")
+					#print(CSQ)
+
+				if i.startswith('DP'):
+					#print(i)
+					depth = i
+					dp = i[3:len(i)]
+					#print(dp)
+				
 			# checking if information for read depth is available
-			depth = info[0]
-			if depth[0] != 'D' or depth[1] != 'P':
-				depth = 'DP'
-				allele_frequency = ""
-				dp = ''
-				CSQ = str(info[14]).split("|")		# Consequences of the INFO field, on thirteenth place, if read depth is not available on fourteenth place
-			else: 
-				dp = depth[3:(len(depth))]
-				dp = int(dp)
+#			depth = info[0]
+#			if depth[0] != 'D' or depth[1] != 'P':
+#				depth = 'DP'
+#				allele_frequency = ""
+#				dp = ''
+#				CSQ = str(info[14]).split("|")		# Consequences of the INFO field, on thirteenth place, if read depth is not available on fourteenth place
+#			else: 
+#				dp = depth[3:(len(depth))]
+#				dp = int(dp)
 	
 
 			# calculating (variant) Allele Frequencies if read depth and the number of alternating allele are available
@@ -458,8 +470,9 @@ def output(file): # output of the analysis
 	nonsynonymous = missense + frameshift + stop
 
 	#o = open("Output/Annotation_output.txt", "w") 
+	#o = open("/home/lea/Dokumente/BA/Output/{}_Output_Annotation.txt".format(name_sample), "w")
 	o = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/Bachelorarbeit_git_repository/Output/{}_Output_Annotation.txt".format(name_sample), "w")
-	#o = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/Bachelorarbeit_git_repository/Output/Output1.txt", "w")
+	
 
 	o.write('Analysis of the files \"{}\" and \"{}\"\n'.format(name_vcf, name_tsv))
 	#o.write('\033[1m' + "TEST")
@@ -498,10 +511,11 @@ def output(file): # output of the analysis
 
 	o.write("\n\n")
 	# output of the variations in homologous recombination genes
-	o.write('Variations in homologous recombination genes\n\n'.format())
+	o.write('Variations in homologous recombination genes\n')
+	o.write('--------------------------------------------\n\n')
 
 	for gene_info in hrgenes_list:
-		
+
 		gene_count = gene_info[1]
 		# output only printed if there are variants:	
 		if gene_count > 0:
@@ -512,7 +526,7 @@ def output(file): # output of the analysis
 				vtype = variant[0]
 				vimpact = variant [1]
 				vbiotype = variant[2]
-				o.write('\n{}:	{} Mutation:	{}	impact: {}	biotype: {}	 \n'.format(gene_name, gene_count, vtype, vimpact, vbiotype))
+				o.write('\n{}:	{} Mutation:	{}	impact: {}	biotype: {}	 '.format(gene_name, gene_count, vtype, vimpact, vbiotype))
 				
 			# for more than one variants per gene: 
 			if gene_count >= 2:
@@ -521,7 +535,7 @@ def output(file): # output of the analysis
 				vimpact = variant[1]
 				vbiotype = variant[2]
 				o.write('\n{}:	{} Mutations:'.format(gene_name, gene_count)) 
-				o.write('	{}	impact: {}	biotype: {}	 \n'.format(vtype, vimpact, vbiotype))
+				o.write('	{}	impact: {}	biotype: {}	 '.format(vtype, vimpact, vbiotype))
 				
 
 			for variants in Variant_types.nonsynonymous:
@@ -539,20 +553,20 @@ def output(file): # output of the analysis
 				vtype = variant[0]
 				vimpact = variant[1]
 #					vbiotype = variant[2]
-				o.write('			{}	impact: {}	'.format(vtype, vimpact))
+				o.write('\n			{}	impact: {}	'.format(vtype, vimpact))
 				for variants in Variant_types.nonsynonymous:
 				#o.write(" {}".format(variant))
 				#o.write(" {}".format(variants[0]))
 					if vtype == variants[0]:
-						o.write("	nonsynonymous variant\n")
+						o.write("	nonsynonymous variant")
 				for variants in Variant_types.synonymous:
 					if vtype == variants[0]:
 						o.write("	synonymous variant")
-
+			o.write('\n')
 			for gene_info_cnv in hrgenes_list_cnv:
 				if gene_name == gene_info_cnv[0] and gene_info_cnv[1] > 0:
 					o.write('\n	{} Copy number variation:		{} \n'.format(gene_info_cnv[1], gene_info_cnv[2]))
-			
+		#o.write('\n')
 		if gene_count == 0:
 			gene_name = gene_info[0]
 			for gene_info_cnv in hrgenes_list_cnv:
@@ -566,6 +580,8 @@ def output(file): # output of the analysis
 	o.write('\n')
 	o.write("Variations in genes that can result in Resistance to ICB")
 	o.write("\n")
+	o.write("--------------------------------------------------------")
+	o.write('\n')
 	o.write('\n')
 	for gene_info in resistance_genes_list:
 		gene_count = gene_info[1]
@@ -578,7 +594,7 @@ def output(file): # output of the analysis
 				vtype = variant[0]
 				vimpact = variant [1]
 				vbiotype = variant[2]
-				o.write('\n{}:	{} Mutation:	{}	impact: {}	biotype: {}	 \n'.format(gene_name, gene_count, vtype, vimpact, vbiotype))
+				o.write('\n{}:	{} Mutation:	{}	impact: {}	biotype: {}	 '.format(gene_name, gene_count, vtype, vimpact, vbiotype))
 			# for more than one variants per gene: 
 			if gene_count >= 2:
 				variant = gene_info[2]
@@ -586,7 +602,7 @@ def output(file): # output of the analysis
 				vimpact = variant[1]
 				vbiotype = variant[2]
 				o.write('\n{}:	{} Mutations:'.format(gene_name, gene_count)) 
-				o.write('	{}	impact: {}	biotype: {}	 \n'.format(vtype, vimpact, vbiotype))
+				o.write('	{}	impact: {}	biotype: {}	 '.format(vtype, vimpact, vbiotype))
 
 			for variants in Variant_types.nonsynonymous:
 				#o.write(" {}".format(variant))
@@ -601,16 +617,16 @@ def output(file): # output of the analysis
 				variant = gene_info[i]
 				vtype = variant[0]
 				vimpact = variant[1]
-				o.write('			{}	impact: {}	'.format(vtype, vimpact))
+				o.write('\n			{}	impact: {}	'.format(vtype, vimpact))
 				for variants in Variant_types.nonsynonymous:
 				#o.write(" {}".format(variant))
 				#o.write(" {}".format(variants[0]))
 					if vtype == variants[0]:
-						o.write("	nonsynonymous variant\n")
+						o.write("	nonsynonymous variant")
 				for variants in Variant_types.synonymous:
 					if vtype == variants[0]:
 						o.write("	synonymous variant")
-
+			o.write('\n')
 			for gene_info_cnv in resistance_genes_list_cnv:
 				if gene_name == gene_info_cnv[0] and gene_info_cnv[1] > 0:
 					o.write('\n	{} Copy number variation:		{} \n'.format(gene_info_cnv[1], gene_info_cnv[2]))
@@ -627,7 +643,8 @@ def output(file): # output of the analysis
 	o.write('\n')
 	# output of the genes with variations
 	o.write("\n")
-	o.write('Genes that are affected of Variations\n\n')
+	o.write('Genes that are affected of Variations\n')
+	o.write('-------------------------------------\n\n')
 	for gene_info in gene_list:
 		gene_count = gene_info[1]
 		# output, if the gene has at least one variant	
@@ -652,10 +669,10 @@ def output(file): # output of the analysis
 				#o.write(" {}".format(variant))
 				#o.write(" {}".format(variants[0]))
 					if vtype == variants[0]:
-						o.write("		nonsynonymous variant")
+						o.write("		nonsynonymous variant\n")
 				for variants in Variant_types.synonymous:
 					if vtype == variants[0]:
-						o.write("	synonymous variant")
+						o.write("	synonymous variant\n")
 				for i in range(3,len(gene_info)):
 					variant = gene_info[i]
 					vtype = variant[0]
@@ -665,10 +682,10 @@ def output(file): # output of the analysis
 					for variants in Variant_types.nonsynonymous:
 				
 						if vtype == variants[0]:
-							o.write("		nonsynonymous variant")
+							o.write("		nonsynonymous variant\n")
 					for variants in Variant_types.synonymous:
 						if vtype == variants[0]:
-							o.write("		synonymous variant")
+							o.write("		synonymous variant\n")
 
 			
 
@@ -751,7 +768,9 @@ def output(file): # output of the analysis
 	print("")
 
 
-	print("The output is stored in ", "'/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/Bachelorarbeit_git_repository/Output/{}_Output_Annotation.txt'".format(name_sample))
+	print("The output is stored in ", "'Output/{}_Output_Annotation.txt'".format(name_sample))
+
+
 	
 
 output(vcf)
