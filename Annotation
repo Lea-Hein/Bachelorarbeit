@@ -490,9 +490,9 @@ def output(file): # output of the analysis
 	o.write('\n			    {} Losses of heterozygosity\n'.format(loh))
 	o.write('\n')
 
-	o.write("{} variants with high impact".format(high)) 
-	o.write("{} variants with moderate impact".format(moderate)) 
-	o.write("{} variants with low impact".format(low)) 
+	o.write("{} variants with high impact\n".format(high)) 
+	o.write("{} variants with moderate impact\n".format(moderate)) 
+	o.write("{} variants with low impact\n".format(low)) 
 	o.write("{} variants with modifier impact\n".format(modifier)) 
 	o.write('\n')
 	o.write("size of all CNVs: {} bases = {} gb \n".format(size, size_gb))
