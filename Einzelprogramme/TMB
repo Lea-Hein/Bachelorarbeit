@@ -100,6 +100,7 @@ def count_variants():
 #print("i", i)
 #print(count_variants() / count_bases())
 
+
 # naive calculation of Tumor Mutational Burden TMB
 def TMB():
 	TMB = count_variants()/count_bases()
