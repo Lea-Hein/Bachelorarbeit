@@ -752,8 +752,6 @@ def output(file): # output of the analysis
 
 
 	print("The output is stored in ", "'/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/Bachelorarbeit_git_repository/Output/{}_Output_Annotation.txt'".format(name_sample))
-
-	print(name_sample)
 	
 
 output(vcf)
