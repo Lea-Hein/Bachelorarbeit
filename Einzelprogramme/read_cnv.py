@@ -37,12 +37,12 @@ def read_cnv():
 	complete_genome = 3.1 	# GRCh37: chromosome length total 3.1 Gb
 	CN_genes = [[" ",0," "]]
 	count = 0
-	reihe = 0
+	row = 0
 	c = 0
 
 	read_tsv = csv.reader(tsv, delimiter="\t")
 	for row in read_tsv:
-		reihe += 1
+		row += 1
 		
 		if str(row)[2] != '#':
 			cnv = cnv + 1			# count number of CNVs

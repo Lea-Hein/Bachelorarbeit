@@ -336,6 +336,14 @@ def read_vcf(file):	# analysis of the vcf file
 
 
 			# print individual information for each Variant 
+			print('varianten', v)
+			print('')
+			print('snps', snp)
+			print('')
+			print('deletion', deletion)
+			print('')
+			print('insertion', insertion)
+			print('')
 			print(chromosom)
 			print(variant, ref, alt)
 			print(varianttype)
@@ -390,13 +398,13 @@ def read_cnv(): # analysis of the copy number variations
 	global size
 	global complete_genome
 	global cnv
-	global deletion
-	global amplification
-	global loh
+	global deletion_cnv
+	global amplification_cnv
+	global loh_cnv
 	cnv = 0
-	deletion = 0
-	amplification = 0
-	loh = 0
+	deletion_cnv = 0
+	amplification_cnv = 0
+	loh_cnv = 0
 	chromosom = ""
 	size = 0
 	complete_genome = 3.1 	# GRCh37: chromosome length total 3.1 Gb
@@ -417,13 +425,13 @@ def read_cnv(): # analysis of the copy number variations
 
 			state = row[6]			# state of the CNV: Deletion, AMplification, Loss of Heterozygosity
 			if state == "DEL":
-				deletion += 1
+				deletion_cnv += 1
 				cnv_type = "deletion"
 			elif state == "AMP":
-				amplification += 1
+				amplification_cnv += 1
 				cnv_type = "amplification"
 			elif state == "LOH":
-				loh += 1
+				loh_cnv += 1
 				cnv_type = "loss of heterozygosity"
 
 			genes = (row[25]).split(",")			# genes which harbour cnvs and were included in CGI analysis 
@@ -484,10 +492,10 @@ def output(file): # output of the analysis
 	o.write('\n			    {} frameshift Variants'.format(frameshift))
 	o.write('\n			    {} stop gained \n'.format(stop))
 	o.write('\n')
-	o.write("{} Copy number variants: {} Deletions".format(cnv, deletion))
-	#o.write('\n			    {} Deletions'.format(deletion))
-	o.write('\n			    {} Amplifications'.format(amplification))
-	o.write('\n			    {} Losses of heterozygosity\n'.format(loh))
+	o.write("{} Copy number variants: {} Deletions".format(cnv, deletion_cnv))
+	#o.write('\n			    {} Deletions'.format(deletion_cnv))
+	o.write('\n			    {} Amplifications'.format(amplification_cnv))
+	o.write('\n			    {} Losses of heterozygosity\n'.format(loh_cnv))
 	o.write('\n')
 
 	o.write("{} variants with high impact\n".format(high)) 

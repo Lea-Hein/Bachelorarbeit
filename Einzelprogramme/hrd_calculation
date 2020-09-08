@@ -1,0 +1,102 @@
+
+import csv, sys
+
+def open_cnv():
+
+	tsv = sys.argv[1]
+
+	if tsv[len(tsv)-3:len(tsv)] == "tsv":
+		tsv = open(sys.argv[1])
+	else:
+		print("incorrect file type")
+		sys.exit(0)
+	global name_tsv
+	name_tsv = str(sys.argv[1])
+	return tsv
+
+cnv = open_cnv()
+
+def read_cnv():
+
+	global hrd_loh
+	hrd_loh = 0
+	global lst
+	lst = 0
+
+	chr_cnv_1 = 0
+	end_cnv_1 = 0
+
+	r = 0
+	distance = 0
+
+	cnv_tsv = csv.reader(cnv, delimiter="\t")
+	for row in cnv_tsv:
+		r += 1
+		if str(row)[2] != '#':
+# LOH bestimmen
+			
+			state = row[6]
+			size = int(row[4])
+			cnv_type = row[22]
+			
+			if state == "LOH":
+				if size > 15000000 and cnv_type != "chromosome":
+					hrd_loh += 1
+
+# LST  bestimmen
+			chromosome = row[0]
+			start = int(row[1])
+			end = int(row[2])
+
+
+			print("distance", distance)
+			print("distance", 3000000)
+			print("")
+			print("row", r)
+			print("Lst", lst)
+			print("chr_alt ", chr_cnv_1)
+			print("end_cnv ", end_cnv_1)
+			print("start", start)
+			print("")
+			
+			if chr_cnv_1 != 0 and end_cnv_1 != 0:
+				if chromosome == chr_cnv_1 and size >= 10000000:
+					distance = start - end_cnv_1
+					if distance <= 3000000:
+						lst += 1
+
+						chr_cnv_1 = 0
+						end_cnv_1 = 0
+			if size >= 10000000:
+				chr_cnv_1 = chromosome
+				end_cnv_1 = end
+			else:
+				chr_cnv_1 = 0
+				end_cnv_1 = 0
+
+# TAI bestimmen
+
+
+
+
+
+	print("HRD_LOH = ", hrd_loh)
+	print("LST = ", lst)
+
+
+def output():
+	global name_sample
+	name_sample = name_tsv[name_tsv.index("DX"):name_tsv.rindex("DX") + (name_tsv.rindex("DX") - name_tsv.index("DX")) -1]
+
+	read_cnv()
+	
+
+	output = open("/home/lea/Dokumente/BA/Output/{}/{}_Output_HRD_Calculation.txt".format(name_sample, name_sample), "w")
+	output.write("Loss of Heterozygosity: {} \n".format(hrd_loh))
+	output.write("Large Scale Transitions: {} \n".format(lst))
+
+	hrd = hrd_loh + lst # + tai
+
+	output.write("\n")
+	output.write("Homologous Recombination Deficiency Score: {}\n".format(hrd))
+output()
