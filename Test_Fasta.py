@@ -71,106 +71,185 @@ def read_fasta():
 
     read_vcf()
 
-    x = 23219597
-   # print("searched position:", x)
-    b_2 = 0
-    b_1 = 0
-    l = 0
+    b_2 = 0                             #number of bases inclusive the current line
+    b_1 = 0                             #number of bases exclusive the current line
+    l = 0                               # number of lines
     line = "fastaline"
     
     name_vcf = str(sys.argv[2])
     name_sample = name_vcf[name_vcf.index("DX"):name_vcf.rindex("DX") + (name_vcf.rindex("DX") - name_vcf.index("DX"))-1]
-    out = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/{}_SNP_sequences.fa".format(name_sample), "w")
+    out = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/{}_SNP_sequences.fa".format(name_sample), "w")  # output: fasta file containing the sequence around the snps
+    
     print(name_sample)
     print("")
     
     while line != "":
         line = str(fasta.readline())                    # Zeile a
-        print("beginn / nach break")
-        print(line)
+#        print("start")
+#        print(line)
         if line == "":
            break
-        if line[0] == ">":
-            print(line)                                 # selbe Zeile wie a
-            print("number of bases:", b_2)
-            b_2 = 0    
-            chr_fa = line[1:5]
-            print(variantlist)
-            for v in variantlist:
-                chromosome = v[0]
-         #   print(variantlist)
-          #  print(chr_fa)
-                if chr_fa == chromosome:
-                    print(v)
-                    i = variantlist.index(v)
-                    print(i)
-                    print("Test")
-                    print(v[i])
-                    v.remove(chromosome)
-                    v.insert(0,2340)
-                    print(v)
+        if variantlist == []:
+            break
+        if variantlist[0] == []:
+            variantlist.remove([])
+        if variantlist[0][0][0:3] == 'chr':
+            chr_list = variantlist[0][0]
+            print("ist ein chromosom")
+            print("")
+            while line[0] !=">":
+                line = str(fasta.readline())   
+                
+            if line[0] == ">":                              # checking if line is header -> for which chromosome ?
+                print("beginnt line mit >")
+                print(line)                                 # selbe Zeile wie a
+                print("number of bases:", b_2)
+                b_2 = 0   
+                splittedline = line.split(" ")
+                chr_fa = splittedline[0][1:len(splittedline[0])]               
+                #chr_fa = line[1:5]
+                print("fasta chromosom:", chr_fa)
+                print("listen chromosom", chr_list)
+                print("")
+                        
+                if chr_fa == chr_list:
+                    print("")
                     print(variantlist)
-            chromosome = chr_fa
-      #  line = str(fasta.readline())
-        print("Zeile1")
-        print(line)                                     # selbe Zeile wie a
-       # line = str(fasta.readline())
-        while line != "":
-       # print("TEST1")
-        #print(line)
-        #print("")
-            line = str(fasta.readline())
-            print(line)                                 # neu, zeile b
-            if line[0] == ">":
-                print("naechstes Chromosom?")
-                print(line)
-                break
-        #print("Zeile2")
-        #print(line)
-      #  print("TEST2")
-            b_1 = b_2
-            l = len(line)-1
-            b_2 = b_2 + l
-       # print("B_1:")
-       # print(b_1)
-       # print("x", x)
-       # print("B_2")
-        #print(b_2)
-           # print(b_1)
-           # print(b_2)
-           # print("")
-         #   for x in variantlist[i]:
-        #print(variantlist[i])
-        #for x in variantlist[i]:
-         #   print(x)
-            y = variantlist[i]
-            
-            x = y[0]
-            print(y)
-            print("B_1")
-            print(b_1)
-            print("B_2")
-            print(b_2)
+                    variantlist[0].remove(chr_list)
+                    print("")
+                    print(variantlist)
+                    line = str(fasta.readline())
+                    continue
+                continue
+
+                
+                                         # selbe Zeile wie a
+        
+
+        b_1 = b_2
+        l = len(line)-1
+        b_2 = b_2 + l
+       
+        firstlist = variantlist[0]
+
+ #           print(firstlist)
+#            print("B_1")
+ #           print(b_1)
+    #        print("B_2")
+    #        print(b_2)
         #print(x)
-            if x <= b_2 and x >= b_1:
+#            print(firstlist[0])
+ #           if b_2 > 18000000:
+ #               print(b_2)
+ #           while firstlist[0] != "":
+            #    if int(x) <= b_2 and int(x) >= b_1:
+        if variantlist[0] == []:
+            variantlist.remove([])
+            break                            #???????????
+                        
+        x = firstlist[0]                # SNP Position in list, no integer is saved as string!
+       
+#        print("statuspunkt 1")
+        if int(x)-15 <= b_2 and int(x)-15 >= b_1:
+            out.write("> {} |{} |{} \n".format(name_sample, chr_list, x))
+            print(b_1)
+            print(line)
+            print(b_2)
+            # for i in range(14, 0, -1):                    alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+                # w = int(x) - b_1 - 1
+                # s = w-i
+                # print(s)
+                # if s == str(b_2)[-2:0]:
+                    # rest = i                              rest = wieviele der 15 zeilen sind in der naechsten zeile?
+                    # break
+                # y = line[s]
 
-                print(chromosome)
-                print("basen bis zur letzten zeile")
-                print(b_1)
-                print("gesuchte Position")
-                print(x)
-                print("basen inkl dieser zeile")
-                print(b_2)
-                print(line)
-                print(l)
+                # out.write("{}".format(y))
+            out.write("\n{}".format(line))    
+            
+        if int(x) <= b_2 and int(x) >= b_1:
+             
+            print(firstlist)       
+            print("")
+            print(firstlist[0])
+            print(chr_fa)                                           #fasta chromosome, oder auch das der snp liste angeben
+            print("basen bis zur letzten zeile")
+            print(b_1)
+            print("basen inkl dieser zeile")
+            print(b_2)
+            print("")
+            print("x-15")
+            print(int(x) -15)
+            print("gesuchte Position")
+            print(x)
+            print("x+15")
+            print(int(x) +15)
+            print("")
+            print(line)
+            print(l)
 
-                y = x - b_1
-                z = line[y -1]
-                print(z)
-                variantlist[i].remove(x)
-                print(variantlist[i])
-                print("x gefunden, entfernt")
+            p = int(x) - b_1
+            z = line[p -1]
+           
+            print(z)
+            
+            firstlist.remove(x)
+            print(firstlist)
+            print("x:", x," gefunden, entfernt")
+            print("")
+            print(variantlist)
+            print(firstlist)
+            print("")
+            out.write("\n> {} |{} |{} \n".format(name_sample, chr_list, x))
+            out.write("{}\n".format(z))
+            out.write("")
+            if firstlist == []:
+                variantlist.remove([])
+                continue
+                
+            m = 0
+            for j in firstlist:
+                if int(j) <= b_2:
+                    m += 1
+            while m > 0:
+                print("m ",m)
+                print(firstlist)
+                if int(firstlist[0]) <= b_2 and int(firstlist[0]) >= b_1:
+ #          while int(y[0]) <= b_2:
+                    x = firstlist[0]
+                    print(chr_fa)
+                    print("basen bis zur letzten zeile")
+                    print(b_1)
+                    print("basen inkl dieser zeile")
+                    print(b_2)
+                    print("")
+                    print("x-15")
+                    print(int(x) -15)
+                    print("gesuchte Position")
+                    print(x)
+                    print("x+15")
+                    print(int(x) +15)
+                    print("")
+                    print(line)
+                    print(l)
 
-                out.write(">{} |{} |{}".format(name_sample, chromosome, x))
+                    p = int(x) - b_1
+                    z = line[p -1]
+                    print(z)
+                    firstlist.remove(x)
+                    out.write("> {} |{} |{} \n".format(name_sample, chr_list, x))
+                    out.write("{}\n".format(z))
+                    out.write("")
+                    m -= 1
+                    print(firstlist)
+                    print("x:", x," gefunden, entfernt")
+                    print("")
+                    if firstlist == []:
+                        variantlist.remove([])
+                        continue
+                        
+            
 
+
+    out.close()
 read_fasta()
