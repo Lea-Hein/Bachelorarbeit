@@ -80,6 +80,8 @@ def read_fasta():
     name_sample = name_vcf[name_vcf.index("DX"):name_vcf.rindex("DX") + (name_vcf.rindex("DX") - name_vcf.index("DX"))-1]
     out = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/{}_SNP_sequences.fa".format(name_sample), "w")  # output: fasta file containing the sequence around the snps
     
+    variantlist[0].insert(1,'12910')
+    
     print(name_sample)
     print("")
     
@@ -116,6 +118,7 @@ def read_fasta():
                     print("")
                     print(variantlist)
                     variantlist[0].remove(chr_list)
+                    
                     print("")
                     print(variantlist)
                     line = str(fasta.readline())
@@ -150,22 +153,337 @@ def read_fasta():
         x = firstlist[0]                # SNP Position in list, no integer is saved as string!
        
 #        print("statuspunkt 1")
+        rest = 0
         if int(x)-15 <= b_2 and int(x)-15 >= b_1:
-            out.write("> {} |{} |{} \n".format(name_sample, chr_list, x))
-            print(b_1)
-            print(line)
-            print(b_2)
-            # for i in range(14, 0, -1):                    alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
-                # w = int(x) - b_1 - 1
-                # s = w-i
-                # print(s)
-                # if s == str(b_2)[-2:0]:
-                    # rest = i                              rest = wieviele der 15 zeilen sind in der naechsten zeile?
-                    # break
-                # y = line[s]
+# OPTION 1       
+           if int(x)+15 <= b_2 and int(x)+15 >= b_1:
+            print("OPTION1")
+            out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            
+            print("b1",b_1)
+            print("x-15", int(x)-15)
+            print("x", x)
+            print("x+15", int(x)+15)
+            print("b2",b_2)
+            for i in range(15, -15, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
 
-                # out.write("{}".format(y))
-            out.write("\n{}".format(line))    
+                w = int(x) - b_1 - 1                        # 2 ?????
+                s = w-i
+                print("s",s)
+                print("i", i)
+                y = line[s]
+                print(y)
+                print(line)
+
+                out.write("{}".format(y))
+            firstlist.remove(x)
+            print(firstlist)
+            print("x:", x," gefunden, entfernt")
+            print("")
+            if firstlist == []:
+                variantlist.remove([])
+                continue
+            m = 0
+            n = 0
+            o = 0
+            for j in firstlist:
+                if (int(j)-15) <= b_2 and (int(j)-15) >= b_1:
+                    m += 1
+                    print(b_1)
+                    print(j)
+                    print(b_2)
+                    print("m",m)
+                if int(j) <= b_2 and int(j) >= b_1:
+                    n += 1
+                    print(b_1)
+                    print(j)
+                    print(b_2)
+                    print("n",n)
+                # if int(j) > b_2:
+                    # o += 1
+                    # print(b_1)
+                    # print(j)
+                    # print(b_2)
+                    # print("o",o)
+            if m == 0 and n == 0: # and o == 0:
+                print("alle drei gleich 0")
+                continue
+            
+            while m > 0:
+# OPTION 1-1                        int(j)-15 <= b_2 and int(j)-15 >= b_1
+                x = firstlist[0]
+                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            
+                print("option 1-1")
+            
+                print("b1",b_1)
+                print("x-15", int(x)-15)
+                print("x", x)
+                print("x+15", int(x)+15)
+                print("b2",b_2)
+                for i in range(15, -15, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+
+                    w = int(x) - b_1 - 1                        # 2 ?????
+                    s = w-i
+                    print("s",s)
+                    print("i", i)
+                    y = line[s]
+                    print(y)
+                    print(line)
+
+                    out.write("{}".format(y))
+                firstlist.remove(x)
+                print(firstlist)
+                print("x:", x," gefunden, entfernt")
+                print("")
+                if firstlist == []:
+                    variantlist.remove([])
+                    
+            
+            while n > 0:
+# OPTION 1-2                            int(x) <= b_2 and int(x) >= b_1
+                x = firstlist[0]
+                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                print("option 1-2")
+                print("b1",b_1)
+                print("x-15", int(x)-15)
+                print("x", x)
+                print("x+15", int(x)+15)
+                print("b2",b_2)
+                for i in range(15, -16, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+
+                    w = int(x) - b_1 - 1
+                    s = w-i
+                    print("s",s)
+                    print("i", i)
+                    if s == str(b_2)[-2:len(str(b_2)) ]:
+                        rest = i -1                     #rest = wieviele der 15 zeilen sind in der naechsten zeile?
+                        print("rest", rest)
+                        break
+                    if s == l:
+                        rest = i + 16
+                        print("rest", rest)
+                        print("")
+                        break
+                    y = line[s]
+                    print(y)
+                    print(line)
+
+                    out.write("{}".format(y))
+                if rest != 0:
+                    line = str(fasta.readline())
+                    b_1 = b_2
+                    l = len(line)-1
+                    b_2 = b_2 + l
+                    for i in range (0, rest):
+                        print("")
+                        print("Rest nicht 0")
+                        print("x", x)
+                        print("b1",b_1)
+
+                        print("x+15", int(x)+15)
+                        print("b2",b_2)
+                        w = int(x) - b_1 - 1
+                        s = 0 + i
+                        print("s",s)
+                        print("i", i)
+                    
+                        y = line[s]
+                        print(y)
+                        print(line)
+                        out.write("{}".format(y))
+                firstlist.remove(x)
+                print(firstlist)
+                print("x:", x," gefunden, entfernt")
+                print("")
+
+                if firstlist == []:
+                    variantlist.remove([])
+                    
+            # while o > 0:
+# # OPTION 1-3                                            int(x) > b_2
+                # print("option 1-3")
+                # x = firstlist[0]
+                # out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            
+                # print("b1",b_1)
+                # print("x-15", int(x)-15)
+                # print("x", x)
+                # print("x+15", int(x)+15)
+                # print("b2",b_2)
+                # a = b_2 - (int(x)-15) + 1
+                # print(a)
+                # for i in range(0, a, 1):                 # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+                
+                    # w = int(x) -15 - b_1  - 1
+                # #s = b_2 -i
+                    # s = w + i
+                    # print("s",s)
+                    # print("i", i)
+                # # if s == str(b_2)[-2:len(str(b_2)) ]:
+                    # # rest = i -1                     #rest = wieviele der 15 zeilen sind in der naechsten zeile?
+                    # # print("rest", rest)
+                    # # break
+                # # if s == l:
+                    # # rest = i + 16
+                    # # print("rest", rest)
+                    # # print("")
+                    # # break
+                    # y = line[s]
+                    # print(y)
+                    # print(line)
+                    # out.write("{}".format(y))
+                
+                # line = str(fasta.readline())
+                # b_1 = b_2
+                # l = len(line)-1
+                # b_2 = b_2 + l
+                # c = (int(x)+15) - b_1 
+                # for i in range (0, c):
+                    # s = 0 + i
+                    # print("s", s)
+                    # print("i", i)
+                    # y = line[s]
+                    # print(y)
+                    # print(line)
+                    # out.write("{}".format(y))
+              
+                # print(firstlist)
+                # print("x", x)
+              
+                # firstlist.remove(x)
+                # print(firstlist)
+                # print("x:", x," gefunden, entfernt")
+                # print("")
+              
+                # if firstlist == []:
+                    # variantlist.remove([])
+           
+           
+           
+           elif int(x) <= b_2 and int(x) >= b_1:
+# OPTION 2
+            print("OPTION2")
+            out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            
+            print("b1",b_1)
+            print("x-15", int(x)-15)
+            print("x", x)
+            print("x+15", int(x)+15)
+            print("b2",b_2)
+            for i in range(15, -16, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+
+                w = int(x) - b_1 - 1
+                s = w-i
+                print("s",s)
+                print("i", i)
+                if s == str(b_2)[-2:len(str(b_2)) ]:
+                    rest = i -1                     #rest = wieviele der 15 zeilen sind in der naechsten zeile?
+                    print("rest", rest)
+                    break
+                if s == l:
+                    rest = i + 16
+                    print("rest", rest)
+                    print("")
+                    break
+                y = line[s]
+                print(y)
+                print(line)
+
+                out.write("{}".format(y))
+            if rest != 0:
+                line = str(fasta.readline())
+                b_1 = b_2
+                l = len(line)-1
+                b_2 = b_2 + l
+                for i in range (0, rest):
+                    print("")
+                    print("Rest nicht 0")
+                    print("x", x)
+                    print("b1",b_1)
+
+                    print("x+15", int(x)+15)
+                    print("b2",b_2)
+                    w = int(x) - b_1 - 1
+                    s = 0 + i
+                    print("s",s)
+                    print("i", i)
+                    
+                    y = line[s]
+                    print(y)
+                    print(line)
+                    out.write("{}".format(y))
+            firstlist.remove(x)
+            print(firstlist)
+            print("x:", x," gefunden, entfernt")
+            print("")
+
+            if firstlist == []:
+                variantlist.remove([])
+                continue
+                    
+           elif int(x) > b_2:
+# OPTION 3
+              print("OPTION3")
+              out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            
+              print("b1",b_1)
+              print("x-15", int(x)-15)
+              print("x", x)
+              print("x+15", int(x)+15)
+              print("b2",b_2)
+              a = b_2 - (int(x)-15) + 1
+              print(a)
+              for i in range(0, a, 1):                 # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+                
+                w = int(x) -15 - b_1  - 1
+                #s = b_2 -i
+                s = w + i
+                print("s",s)
+                print("i", i)
+                # if s == str(b_2)[-2:len(str(b_2)) ]:
+                    # rest = i -1                     #rest = wieviele der 15 zeilen sind in der naechsten zeile?
+                    # print("rest", rest)
+                    # break
+                # if s == l:
+                    # rest = i + 16
+                    # print("rest", rest)
+                    # print("")
+                    # break
+                y = line[s]
+                print(y)
+                print(line)
+                out.write("{}".format(y))
+                
+              line = str(fasta.readline())
+              b_1 = b_2
+              l = len(line)-1
+              b_2 = b_2 + l
+              c = (int(x)+15) - b_1 
+              for i in range (0, c):
+                s = 0 + i
+                print("s", s)
+                print("i", i)
+                y = line[s]
+                print(y)
+                print(line)
+                out.write("{}".format(y))
+              
+              print(firstlist)
+              print("x", x)
+              
+              firstlist.remove(x)
+              print(firstlist)
+              print("x:", x," gefunden, entfernt")
+              print("")
+              
+              if firstlist == []:
+                variantlist.remove([])
+                continue
+
+           print("hallo")
+
+   
             
         if int(x) <= b_2 and int(x) >= b_1:
              
@@ -193,7 +511,7 @@ def read_fasta():
            
             print(z)
             
-            firstlist.remove(x)
+            #firstlist.remove(x)
             print(firstlist)
             print("x:", x," gefunden, entfernt")
             print("")
