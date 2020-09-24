@@ -42,6 +42,8 @@ def read_vcf():
     position = 0
     global variantlist 
     variantlist = []
+    global baselist
+    baselist = []
 
     line ="variant"
     while line != "":
@@ -54,12 +56,16 @@ def read_vcf():
             last_chr = chromosome
             chromosome = data[0]
             position = data[1]
+            reference = data[3]
+            alternate = data[4]
             
             if last_chr != chromosome:
                 variantlist.append([chromosome, position])
+                baselist.append([reference, alternate])
             else:
                 l = len(variantlist)
                 variantlist[l-1].append(position)
+                baselist.append([reference, alternate])
     print(variantlist)
 
 
@@ -79,8 +85,9 @@ def read_fasta():
     name_vcf = str(sys.argv[2])
     name_sample = name_vcf[name_vcf.index("DX"):name_vcf.rindex("DX") + (name_vcf.rindex("DX") - name_vcf.index("DX"))-1]
     out = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/{}_SNP_sequences.fa".format(name_sample), "w")  # output: fasta file containing the sequence around the snps
+    out.write("{}".format(baselist))
     
-    variantlist[0].insert(1,'12910')
+#    variantlist[0].insert(1,'12910')
     
     print(name_sample)
     print("")
@@ -158,6 +165,7 @@ def read_fasta():
 # OPTION 1       
            if int(x)+15 <= b_2 and int(x)+15 >= b_1:
             print("OPTION1")
+            out.write("\n")
             out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
             
             print("b1",b_1)
@@ -165,7 +173,7 @@ def read_fasta():
             print("x", x)
             print("x+15", int(x)+15)
             print("b2",b_2)
-            for i in range(15, -15, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
+            for i in range(15, -16, -1):                   # alle 15 zeichen vor snp eintragen, falls in der zeile vorhanden
 
                 w = int(x) - b_1 - 1                        # 2 ?????
                 s = w-i
@@ -212,6 +220,7 @@ def read_fasta():
             while m > 0:
 # OPTION 1-1                        int(j)-15 <= b_2 and int(j)-15 >= b_1
                 x = firstlist[0]
+                out.write("\n")
                 out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
             
                 print("option 1-1")
@@ -243,6 +252,7 @@ def read_fasta():
             while n > 0:
 # OPTION 1-2                            int(x) <= b_2 and int(x) >= b_1
                 x = firstlist[0]
+                out.write("\n")
                 out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
                 print("option 1-2")
                 print("b1",b_1)
@@ -364,8 +374,20 @@ def read_fasta():
            elif int(x) <= b_2 and int(x) >= b_1:
 # OPTION 2
             print("OPTION2")
+            out.write("\n")
             out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            sameline = 0
+            seq = ""
+            print(firstlist)
+            for i in range(1, len(firstlist),1):
+                print(firstlist[i])
+                if int(firstlist[i]) <= b_2 or (int(firstlist[i])-15) <= b_2:
+                    sameline += 1
+            print(sameline)
             
+            
+           
+            print("")
             print("b1",b_1)
             print("x-15", int(x)-15)
             print("x", x)
@@ -375,6 +397,7 @@ def read_fasta():
 
                 w = int(x) - b_1 - 1
                 s = w-i
+                print("w", w)
                 print("s",s)
                 print("i", i)
                 if s == str(b_2)[-2:len(str(b_2)) ]:
@@ -389,7 +412,7 @@ def read_fasta():
                 y = line[s]
                 print(y)
                 print(line)
-
+                seq = seq + y
                 out.write("{}".format(y))
             if rest != 0:
                 line = str(fasta.readline())
@@ -413,7 +436,32 @@ def read_fasta():
                     print(y)
                     print(line)
                     out.write("{}".format(y))
+                    seq = seq + y
+            t = []
+            for i in range (1, sameline + 1,1):
+                
+                t.append(firstlist[i])
+                print(t)
+                diff = int(firstlist[i]) - int(x)
+                print(diff)
+                newseq = seq[diff:len(seq)]
+                out.write("\n")
+                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, firstlist[i], (int(firstlist[i])-15),(int(firstlist[i])+15)))
+                out.write("{}".format(newseq))
+                line = str(fasta.readline())
+                print(seq)
+                print(newseq)
+                print(line)
+                for j in range (0, diff,1):
+                    u = line[j]
+                    out.write("{}".format(u))
+                    print(u)
+                print("")
+            print(firstlist)    
             firstlist.remove(x)
+            print(firstlist)
+            for i in t:
+                firstlist.remove(i)
             print(firstlist)
             print("x:", x," gefunden, entfernt")
             print("")
@@ -425,6 +473,7 @@ def read_fasta():
            elif int(x) > b_2:
 # OPTION 3
               print("OPTION3")
+              out.write("\n")
               out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
             
               print("b1",b_1)
@@ -483,88 +532,89 @@ def read_fasta():
 
            print("hallo")
 
-   
+#  ALTER CODE
+########################################################################################################################################   
             
-        if int(x) <= b_2 and int(x) >= b_1:
+        # if int(x) <= b_2 and int(x) >= b_1:
              
-            print(firstlist)       
-            print("")
-            print(firstlist[0])
-            print(chr_fa)                                           #fasta chromosome, oder auch das der snp liste angeben
-            print("basen bis zur letzten zeile")
-            print(b_1)
-            print("basen inkl dieser zeile")
-            print(b_2)
-            print("")
-            print("x-15")
-            print(int(x) -15)
-            print("gesuchte Position")
-            print(x)
-            print("x+15")
-            print(int(x) +15)
-            print("")
-            print(line)
-            print(l)
+            # print(firstlist)       
+            # print("")
+            # print(firstlist[0])
+            # print(chr_fa)                                           #fasta chromosome, oder auch das der snp liste angeben
+            # print("basen bis zur letzten zeile")
+            # print(b_1)
+            # print("basen inkl dieser zeile")
+            # print(b_2)
+            # print("")
+            # print("x-15")
+            # print(int(x) -15)
+            # print("gesuchte Position")
+            # print(x)
+            # print("x+15")
+            # print(int(x) +15)
+            # print("")
+            # print(line)
+            # print(l)
 
-            p = int(x) - b_1
-            z = line[p -1]
+            # p = int(x) - b_1
+            # z = line[p -1]
            
-            print(z)
+            # print(z)
             
-            #firstlist.remove(x)
-            print(firstlist)
-            print("x:", x," gefunden, entfernt")
-            print("")
-            print(variantlist)
-            print(firstlist)
-            print("")
-            out.write("\n> {} |{} |{} \n".format(name_sample, chr_list, x))
-            out.write("{}\n".format(z))
-            out.write("")
-            if firstlist == []:
-                variantlist.remove([])
-                continue
+            # #firstlist.remove(x)
+            # print(firstlist)
+            # print("x:", x," gefunden, entfernt")
+            # print("")
+            # print(variantlist)
+            # print(firstlist)
+            # print("")
+            # out.write("\n> {} |{} |{} \n".format(name_sample, chr_list, x))
+            # out.write("{}\n".format(z))
+            # out.write("")
+            # if firstlist == []:
+                # variantlist.remove([])
+                # continue
                 
-            m = 0
-            for j in firstlist:
-                if int(j) <= b_2:
-                    m += 1
-            while m > 0:
-                print("m ",m)
-                print(firstlist)
-                if int(firstlist[0]) <= b_2 and int(firstlist[0]) >= b_1:
- #          while int(y[0]) <= b_2:
-                    x = firstlist[0]
-                    print(chr_fa)
-                    print("basen bis zur letzten zeile")
-                    print(b_1)
-                    print("basen inkl dieser zeile")
-                    print(b_2)
-                    print("")
-                    print("x-15")
-                    print(int(x) -15)
-                    print("gesuchte Position")
-                    print(x)
-                    print("x+15")
-                    print(int(x) +15)
-                    print("")
-                    print(line)
-                    print(l)
+            # m = 0
+            # for j in firstlist:
+                # if int(j) <= b_2:
+                    # m += 1
+            # while m > 0:
+                # print("m ",m)
+                # print(firstlist)
+                # if int(firstlist[0]) <= b_2 and int(firstlist[0]) >= b_1:
+ # #          while int(y[0]) <= b_2:
+                    # x = firstlist[0]
+                    # print(chr_fa)
+                    # print("basen bis zur letzten zeile")
+                    # print(b_1)
+                    # print("basen inkl dieser zeile")
+                    # print(b_2)
+                    # print("")
+                    # print("x-15")
+                    # print(int(x) -15)
+                    # print("gesuchte Position")
+                    # print(x)
+                    # print("x+15")
+                    # print(int(x) +15)
+                    # print("")
+                    # print(line)
+                    # print(l)
 
-                    p = int(x) - b_1
-                    z = line[p -1]
-                    print(z)
-                    firstlist.remove(x)
-                    out.write("> {} |{} |{} \n".format(name_sample, chr_list, x))
-                    out.write("{}\n".format(z))
-                    out.write("")
-                    m -= 1
-                    print(firstlist)
-                    print("x:", x," gefunden, entfernt")
-                    print("")
-                    if firstlist == []:
-                        variantlist.remove([])
-                        continue
+                    # p = int(x) - b_1
+                    # z = line[p -1]
+                    # print(z)
+                    # firstlist.remove(x)
+                    # out.write("> {} |{} |{} \n".format(name_sample, chr_list, x))
+                    # out.write("{}\n".format(z))
+                    # out.write("")
+                    # m -= 1
+                    # print(firstlist)
+                    # print("x:", x," gefunden, entfernt")
+                    # print("")
+                    # if firstlist == []:
+                        # variantlist.remove([])
+                        # continue
                         
             
 
