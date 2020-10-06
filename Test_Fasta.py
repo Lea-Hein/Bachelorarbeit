@@ -245,7 +245,7 @@ def read_fasta():
             out.write("\n")
             out.write("OPTION 1")
             out.write("\n")
-            out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
             print("b1",b_1)
             print("x-15", int(x)-15)
@@ -302,7 +302,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 1-1")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
                 print("option 1-1")
             
@@ -335,7 +335,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 1-2")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 print("option 1-2")
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -399,7 +399,7 @@ def read_fasta():
             out.write("\n")
             out.write("OPTION 2")
             out.write("\n")
-            out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+            out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             sameline = 0
             seq = ""
             print(firstlist)
@@ -477,7 +477,7 @@ def read_fasta():
                 newseq = seq[diff:len(seq)]
                 out.write("\n")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, firstlist[i], (int(firstlist[i])-15),(int(firstlist[i])+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 out.write("{}".format(newseq))
 
                 
@@ -548,7 +548,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 2-1")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
                 print("option 2-1")
             
@@ -583,7 +583,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 2-2")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -646,7 +646,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 2-3")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 print("option 1-2")
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -715,7 +715,7 @@ def read_fasta():
               out.write("\n")
               out.write("OPTION 3")
               out.write("\n")
-              out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+              out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
               
               sameline = 0
               seq = ""
@@ -786,7 +786,7 @@ def read_fasta():
                 newseq = seq[diff:len(seq)]
                 out.write("\n")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, firstlist[i], (int(firstlist[i])-15),(int(firstlist[i])+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 out.write("{}".format(newseq))
 
                 
@@ -831,7 +831,7 @@ def read_fasta():
                 print("")
                 if j == x:
                     out.write("\n")
-                    out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                    out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                     out.write("{}".format(seq))
                     print("j == x")
                     print(firstlist)
@@ -869,7 +869,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 3-1")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
                 print("option 3-1")
             
@@ -904,7 +904,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 3-2")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -967,7 +967,7 @@ def read_fasta():
                 out.write("\n")
                 out.write("OPTION 3-3")
                 out.write("\n")
-                out.write("> {} |{} |{} |{}:{} \n".format(name_sample, chr_list, x, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 print("option 3-3")
                 print("b1",b_1)
                 print("x-15", int(x)-15)
