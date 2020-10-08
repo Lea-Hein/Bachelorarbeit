@@ -467,6 +467,9 @@ def read_fasta():
                     print(line)
                     out.write("{}".format(y))
                     seq = seq + y
+
+#OPTION2-1
+
             t = []
             for i in range (1, sameline + 1,1):
                 
@@ -476,11 +479,14 @@ def read_fasta():
                 print(diff)
                 newseq = seq[diff:len(seq)]
                 out.write("\n")
+                out.write("OPTION 2-1")
                 out.write("\n")
-                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, firstlist[i], name_sample, (int(firstlist[i])-15),(int(firstlist[i])+15)))
                 out.write("{}".format(newseq))
 
                 
+                print("")
+                print("OPTION 2-1")
                 print("")
                 print("b1",b_1)
                 print("i-15", int(firstlist[i])-15)
@@ -543,14 +549,14 @@ def read_fasta():
                 continue
             
             while m > 0:
-# OPTION 2-1                        int(j)+15 <= b_2 and int(j)-15 >= b_1
+# OPTION 2-2                        int(j)+15 <= b_2 and int(j)-15 >= b_1
                 x = firstlist[0]
                 out.write("\n")
-                out.write("OPTION 2-1")
+                out.write("OPTION 2-2")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
-                print("option 2-1")
+                print("option 2-2")
             
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -576,12 +582,12 @@ def read_fasta():
                 m -= 1    
             
             while o > 0:                    
-# OPTION 2-2                                     int(x) - 15 < b_2
+# OPTION 2-3                                     int(x) - 15 < b_2
                 x = firstlist[0]
                 print("")
-                print("OPTION2-2")
+                print("OPTION2-3")
                 out.write("\n")
-                out.write("OPTION 2-2")
+                out.write("OPTION 2-3")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                
@@ -641,10 +647,10 @@ def read_fasta():
                 
                 
             while n > 0:
-# OPTION 2-3                            int(x) <= b_2 and int(x) >= b_1
+# OPTION 2-4                            int(x) <= b_2 and int(x) >= b_1
                 x = firstlist[0]
                 out.write("\n")
-                out.write("OPTION 2-3")
+                out.write("OPTION 2-4")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 print("option 1-2")
@@ -775,6 +781,8 @@ def read_fasta():
                 print(y)
                 print(line)
                 out.write("{}".format(y))
+
+#OPTION3-1
               
               t = []
               for i in range (1, sameline + 1,1):
@@ -785,11 +793,13 @@ def read_fasta():
                 print(diff)
                 newseq = seq[diff:len(seq)]
                 out.write("\n")
+                out.write("OPTION 3-1")
                 out.write("\n")
-                out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
+                out.write("> {} {} |{} |{}:{} \n".format(chr_list, firstlist[i], name_sample, (int(firstlist[i])-15),(int(firstlist[i])+15)))
                 out.write("{}".format(newseq))
 
-                
+                print("")
+                print("OPTION 3-1")
                 print("")
                 print("b1",b_1)
                 print("i-15", int(firstlist[i])-15)
@@ -864,14 +874,14 @@ def read_fasta():
                 continue
             
               while m > 0:
-# OPTION 3-1                        int(j)+15 <= b_2 and int(j)-15 >= b_1
+# OPTION 3-2                        int(j)+15 <= b_2 and int(j)-15 >= b_1
                 x = firstlist[0]
                 out.write("\n")
-                out.write("OPTION 3-1")
+                out.write("OPTION 3-2")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
             
-                print("option 3-1")
+                print("option 3-2")
             
                 print("b1",b_1)
                 print("x-15", int(x)-15)
@@ -898,11 +908,11 @@ def read_fasta():
             
               
               while o > 0:                    
-# OPTION 3-2                                     int(x) - 15 < b_2
+# OPTION 3-3                                     int(x) - 15 < b_2
                 x = firstlist[0]
-                print("OPTION3-2")
+                print("OPTION3-3")
                 out.write("\n")
-                out.write("OPTION 3-2")
+                out.write("OPTION 3-3")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                
@@ -961,11 +971,11 @@ def read_fasta():
                 print(line)
               
               while n > 0:
-# OPTION 3-3                            int(x) <= b_2 and int(x) >= b_1
+# OPTION 3-4                            int(x) <= b_2 and int(x) >= b_1
                 seq = ""
                 x = firstlist[0]
                 out.write("\n")
-                out.write("OPTION 3-3")
+                out.write("OPTION 3-4")
                 out.write("\n")
                 out.write("> {} {} |{} |{}:{} \n".format(chr_list, x, name_sample, (int(x)-15),(int(x)+15)))
                 print("option 3-3")
