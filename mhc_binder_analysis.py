@@ -37,6 +37,7 @@ def detect_binders():
     
     count = 0 # number of potential binder
     hb_count = 0 # number of strong binder
+    wb_count = 0 # number of weak binders
     
     HLA_molecules = peptides.readline()
     HLA_molecules_splitt = HLA_molecules.split()
@@ -66,8 +67,8 @@ def detect_binders():
         h_avg_ranks = data[len(data)-2]
         
 
-        if data[len(data)-1] != "0":
-            count += 1
+        if float(data[len(data)-1]) > 0:
+         #   count += 1
             
 
             for i in range(0,number_HLA_molecules):
@@ -82,14 +83,27 @@ def detect_binders():
                     output.write("\n")
                     output.write("{}".format(line))
                     output.write("\n")
+                    count += 1
                     hb_count += 1
+                elif float(data[4 + i * 3]) <= 2:
+                    print(line)
+  #              output.write("{}\n".format(line))
 
+                    output.write("%rank: {} for {} and {}\n".format(data[4 + i * 3], peptide, HLA_molecules_splitt[i]))
+                    output.write("\n")
+                    output.write("{}".format(line))
+                    output.write("\n")
+                    count += 1
+                    wb_count += 1               
     output.write("\n")    
     output.write("nummber of binder: {}".format(count)) 
     output.write("\n")    
     output.write("nummber of strong binder: {}".format(hb_count))    
+    output.write("\n")    
+    output.write("nummber of weak binder: {}".format(wb_count)) 
     print("number of binder:", count)
     print("number of strong binder:", hb_count)
+    print("number of weak binder:", wb_count)
 
 
 detect_binders()
