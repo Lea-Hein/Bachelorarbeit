@@ -12,53 +12,154 @@ def search_codons():
     global b_1
     global b_2
     global l
-    for i in range(0,len(line)-3):
+    global i_pos_stop
+    global found_start
+    found_start = 0
+    global Start_Stop_Positions
+    a = ""
+    b = ""
+    c = ""
+    i = 0
+  #  print("stop start position", pos_start_stop)
+    print(" start CODON SEarch")
+    print("stop position", i_pos_stop)
+    print("")
+   # i_pos_stop = pos_stop - b_1
+    for i in range(i_pos_stop,len(line)-3):
+        print("codon_for_schleife   i:", i)
         a = line[i]
         b = line[i + 1]
         c = line[i + 2]
-        # print(a,b,c)
+        if c == "N":
+            Start_Stop_Positions.write("c == N, {} {} {}, break und starte skript?".format(a,b,c))
+            break
+            skript()
+        print(a,b,c)
         # print("")
         global pos_a
         pos_a = b_1 + i + 1
 #        print(pos_a)
         search_start(a,b,c,i)
-    line = str(fasta.readline())
+        if found_start == 1:
+            break
+    if found_start == 0:
+        print(line)
+        print("")
+            # print("start und stop  gefunden --> abbrechen von search_codons")
+            # sys.exit()
+            
+        line = str(fasta.readline())
+        if line == "":
+            print("leere Zeile")
+            sys.exit()
+        Start_Stop_Positions.write("Line startet mit {}\n".format(line[0]))
+        print(line)
+        if line[0] == ">":
+            splittedline = line.split(" ")
+            chr_fa = splittedline[0][1:len(splittedline[0])]              
+            Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
+            Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
+            Start_Stop_Positions.write("\n")
+            Start_Stop_Positions.write("#################################################################################################\n")
+            Start_Stop_Positions.write("")
+            
+            line = str(fasta.readline())
+            i_pos_stop = 0
+            b_1 = 0
+            b_2 = 0
+        if line[0] == "N":
+            Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+            skript()
+        i_pos_stop = 0
+        print(line)
 #     if line[0] == ">":
 #        break
-    b_1 = b_2
-    l = len(line)-1
-    b_2 = b_2 + l
+        b_1 = b_2
+        l = len(line)-1
+        b_2 = b_2 + l
 #    print(line)
     
-    d = b
-    e = c
-    f = line[0]
+        d = b
+        e = c
+        f = line[0]
     # print(d,e,f)
     # print("")
-    pos_a = b_1 + i + 1
-    search_start(d,e,f,i)
-    d = c
-    e = line[0]
-    f = line[1]
+        pos_a = b_1 + i + 1
+        search_start(d,e,f,58)
+        d = c
+        e = line[0]
+        f = line[1]
     # print(d,e,f)
     # print("") 
-    pos_a = b_1 + i + 1
-    search_start(d,e,f,i)
+        pos_a = b_1 + i + 1
+        search_start(d,e,f,59)
 
-def search_start(n_1,n_2,n_3,i):
+def search_start(n_1,n_2,n_3,x):
     global stopcodon
+    global found_start
+    global line
+    global b_1
+    global b_2
+    global l
+    global i_pos_stop
+    global Start_Stop_Positions
 # SEARCH START
-    print("SEARCH START")
+    print("SEARCH START", i_pos_stop)
     if n_1 == "A" and n_2 == "T" and n_3 == "G":
-        print("Startcodon gefunden:", n_1,n_2,n_3, "an Position", pos_a)
-        Start_Stop_Positions.write("Startcodon {}{}{} an Position {}\n".format(n_1,n_2,n_3,pos_a))
+        
+        print("+ Startcodon gefunden:", n_1,n_2,n_3, "an Position", pos_a)
+        Start_Stop_Positions.write("+ Startcodon {}{}{} an Position {}\n".format(n_1,n_2,n_3,pos_a))
         Start_Stop_Positions.write("")
         print(n_1,n_2,n_3)
         print("Position",pos_a)
-        print("position", i)
+        print("position", x)
+        Start_Stop_Positions.write("i_position: {}\n".format(x))
+        Start_Stop_Positions.write("{}\n".format(line))
+        print(line)
+        print(b_1)
+        print(b_2)
         print("")
         stopcodon = 0
-        search_stop(i)
+        if x == 59:
+            search_stop(2)
+            found_start = 1
+        if x == 58:
+            search_stop(1)
+            found_start = 1
+        if x == 57:
+            line = str(fasta.readline())
+            if line == "":
+                print("leere Zeile")
+                sys.exit()
+            print(line)
+            Start_Stop_Positions.write("Line startet mit {}\n".format(line[0]))
+            if line[0] == ">":
+                splittedline = line.split(" ")
+                chr_fa = splittedline[0][1:len(splittedline[0])]              
+                Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
+                Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
+                Start_Stop_Positions.write("\n")
+                Start_Stop_Positions.write("#################################################################################################\n")
+                Start_Stop_Positions.write("")
+            
+                line = str(fasta.readline())
+                
+                i_pos_stop = 0
+                b_1 = 0
+                b_2 = 0
+            if line[0] == "N":
+                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                skript()
+            print(line)
+            b_1 = b_2
+            l = len(line)-1
+            b_2 = b_2 + l
+            
+            search_stop(0)
+            found_start = 1
+        else :
+            search_stop(x)
+            found_start = 1
  
 def search_stop(i):
     global line
@@ -66,62 +167,126 @@ def search_stop(i):
     global b_2
     global l
     global pos_a
+    global pos_stop
+    global i_pos_stop
     global stopcodon
     global a
     global b
     global c
+    global Start_Stop_Positions
     print("search Stop gestartet")
     #print(i)
 
     while stopcodon == 0:
-        print("search_stop: while schleife")
-        for i in range(i +3,len(line)-3,3):
-            a = line[i]
-            b = line[i + 1]
-            c = line[i + 2]
+ #       print("search_stop: while schleife")
+        
+        if i < 55:
+            for i in range(i +3,len(line)-3,3):
+                a = line[i]
+                b = line[i + 1]
+                c = line[i + 2]
+                if c == "N":
+                    Start_Stop_Positions.write("c == N, {} {} {}, break und starte skript?".format(a,b,c))
+                  #  break
+                    skript()
         # print("")
 # SEARCH STOP 1
-            print("SEARCH STOP 1")
+                print("SEARCH STOP 1")
+                Start_Stop_Positions.write("SEARCH STOP 1\n")
         # print(a, b, c)
-            pos_a = b_1 + i + 1
-            if a == "T" and b == "A" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
-                Start_Stop_Positions.write("")
-                print("")
-                stopcodon += 1
-                break
-            elif a == "T" and b == "A" and c == "G":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
-                Start_Stop_Positions.write("")
-                print("")
-                stopcodon += 1
-                break
-            elif a == "T" and b == "G" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
-                Start_Stop_Positions.write("")
-                print("")
-                stopcodon += 1
-                break
-            if stopcodon > 0:
-                break
+                pos_stop = b_1 + i + 1
+                i_pos_stop = i
+                if a == "T" and b == "A" and c == "A":
+                    print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                    Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
+                    Start_Stop_Positions.write("")
+                    print(pos_stop)
+                    print(i_pos_stop)
+                    print("")
+                    stopcodon += 1
+                    break
+                elif a == "T" and b == "A" and c == "G":
+                    print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                    Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
+                    Start_Stop_Positions.write("")
+                    print(pos_stop)
+                    print(i_pos_stop)
+                    print("")
+                    stopcodon += 1
+                    break
+                elif a == "T" and b == "G" and c == "A":
+                    print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                    Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
+                    Start_Stop_Positions.write("")
+                    print(pos_stop)
+                    print(i_pos_stop)
+                    print("")
+                    stopcodon += 1
+                    break
+                if stopcodon > 0:
+                    print("stopcodon > 0")
+                    break
         
-        if a == line[57]:
+        if stopcodon == 0 and a == line[57]:
             line = str(fasta.readline())
+            if line == "":
+                print("leere Zeile")
+                sys.exit()
+            print(line)
+            Start_Stop_Positions.write("Line startet mit {}\n".format(line[0]))
+            if line[0] == ">":
+                splittedline = line.split(" ")
+                chr_fa = splittedline[0][1:len(splittedline[0])]              
+                Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
+                Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
+                Start_Stop_Positions.write("\n")
+                Start_Stop_Positions.write("#################################################################################################\n")
+                Start_Stop_Positions.write("")
+            
+                line = str(fasta.readline())
+                i_pos_stop = 0
+                b_1 = 0
+                b_2 = 0
+            if line[0] == "N":
+                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                skript()
+            print(line)
             b_1 = b_2
             l = len(line)-1
             b_2 = b_2 + l
-            print(line)
+           # print(line)
 # SEARCH STOP 2
             print("SEARCH STOP 2")
+            Start_Stop_Positions.write("SEARCH STOP 2\n")
+            Start_Stop_Positions.write("{}\n".format(line))     
             search_stop(0)
-        elif a == line[56]:
+            
+        elif stopcodon == 0 and a == line[56]:
         
             a = line[59]
             
             line = str(fasta.readline())
+            if line == "":
+                print("leere Zeile")
+                sys.exit()
+            Start_Stop_Positions.write("Line startet mit {}\n".format(line[0]))
+            print(line)
+            if line[0] == ">":
+                splittedline = line.split(" ")
+                chr_fa = splittedline[0][1:len(splittedline[0])]              
+                Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
+                Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
+                Start_Stop_Positions.write("\n")
+                Start_Stop_Positions.write("#################################################################################################\n")
+                Start_Stop_Positions.write("")
+            
+                line = str(fasta.readline())
+                i_pos_stop = 0
+                b_1 = 0
+                b_2 = 0
+            if line[0] == "N":
+                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                skript()
             b_1 = b_2
             l = len(line)-1
             b_2 = b_2 + l
@@ -130,26 +295,35 @@ def search_stop(i):
             b = line[0]
             c = line[1]
 # SEARCH STOP 3
-            print("SEARCH STOP 3")            
-            pos_a = b_1 + i + 1
+            print("SEARCH STOP 3")  
+            Start_Stop_Positions.write("SEARCH STOP 3\n") 
+            Start_Stop_Positions.write("{}\n".format(line))            
+            pos_stop = b_1 + i + 1
+            i_pos_stop = i
             if a == "T" and b == "A" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
             elif a == "T" and b == "A" and c == "G":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
             elif a == "T" and b == "G" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
@@ -157,12 +331,33 @@ def search_stop(i):
                 break
             search_stop(2)
             
-        elif a == line[55]:
+        elif stopcodon == 0 and a == line[55]:
             
             a = line[58]
             b = line[59]
             
             line = str(fasta.readline())
+            if line == "":
+                print("leere Zeile")
+                sys.exit()
+            Start_Stop_Positions.write("Line startet mit {}\n".format(line[0]))
+            print(line)
+            if line[0] == ">":
+                splittedline = line.split(" ")
+                chr_fa = splittedline[0][1:len(splittedline[0])]              
+                Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
+                Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
+                Start_Stop_Positions.write("\n")
+                Start_Stop_Positions.write("#################################################################################################\n")
+                Start_Stop_Positions.write("")
+            
+                line = str(fasta.readline())
+                i_pos_stop = 0
+                b_1 = 0
+                b_2 = 0
+            if line[0] == "N":
+                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                skript()
             b_1 = b_2
             l = len(line)-1
             b_2 = b_2 + l
@@ -170,26 +365,35 @@ def search_stop(i):
             
             c = line[0]
  # SEARCH STOP 4
-            print("SEARCH STOP 4")           
-            pos_a = b_1 + i + 1
+            print("SEARCH STOP 4")
+            Start_Stop_Positions.write("SEARCH STOP 4\n")
+            Start_Stop_Positions.write("{}\n".format(line))     
+            pos_stop = b_1 + i + 1
+            i_pos_stop = i
             if a == "T" and b == "A" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
             elif a == "T" and b == "A" and c == "G":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
             elif a == "T" and b == "G" and c == "A":
-                print("Stopcodon gefunden:", a,b,c, "an Position", pos_a)
-                Start_Stop_Positions.write("Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_a))
+                print("- Stopcodon gefunden:", a,b,c, "an Position", pos_stop)
+                Start_Stop_Positions.write("- Stopcodon {}{}{} an Position {}\n".format(a,b,c,pos_stop))
                 Start_Stop_Positions.write("")
+                print(pos_stop)
+                print(i_pos_stop)
                 print("")
                 stopcodon += 1
                 break
@@ -224,6 +428,15 @@ def skript():
     global line
     line = str(fasta.readline())
     global Start_Stop_Positions
+    global pos_start
+    global pos_stop
+    global i_pos_stop
+    global b_1
+    global b_2
+    global l
+    i_pos_stop = 0
+    pos_stop = 0
+    pos_start = 0
     while line != "":
        # line = str(fasta.readline())
         if line[0] == ">":
@@ -236,14 +449,18 @@ def skript():
             Start_Stop_Positions.write("")
             
             line = str(fasta.readline())
+            i_pos_stop = 0
             b_1 = 0
             b_2 = 0
         while line[0] == "N":
             line = str(fasta.readline())
+            i_pos_stop = 0
             b_1 = b_2
             l = len(line)-1
             b_2 = b_2 + l
         print(line)
+        print("start_skript")
+        print("")
         search_codons()
 
 skript()
