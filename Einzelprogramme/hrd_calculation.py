@@ -18,10 +18,13 @@ cnv = open_cnv()
 
 
 def tai_calculation(chr_end):
-            if int(start) == 0:
-                tai += 1
-            if int(end) == chr_end:
-                tai += 1
+    global start
+    global end
+    global tai
+    if int(start) == 0:
+        tai += 1
+    if int(end) == chr_end:
+        tai += 1
 
 def read_cnv():
     global hrd_loh
@@ -31,7 +34,9 @@ def read_cnv():
     global tai
     tai = 0
     
-    chr_cnv_1 = 0
+    global start
+    global end
+    chr_cnv_1 = ""
     end_cnv_1 = 0
     
     r = 0
@@ -42,6 +47,7 @@ def read_cnv():
         r += 1
         if str(row)[2] != '#':
 # LOH bestimmen
+                # number of LOH regions that are bigger than 15MB and smaller than the whole chromosome
 			
             state = row[6]
             size = int(row[4])
@@ -52,37 +58,48 @@ def read_cnv():
                     hrd_loh += 1
 
 # LST  bestimmen
+                # chromosome break between two adjacent regions with 10MB at minimum and aa distance between the regions of 3 MB maximum
             chromosome = row[0]
             start = int(row[1])
             end = int(row[2])
             
+            if chromosome == chr_cnv_1:
+                distance = start - end_cnv_1
+            else: 
+                distance = 0
+            print("chromosome", chromosome)
+            print("chr_alt ", chr_cnv_1)
+            print("    size", size)
+            print("min size", 10000000) 
+            print("    distance", distance)
+            print("max distance", 3000000)
+
+            print("end_cnv_alt ", end_cnv_1)
+            print("start", start)
+
             
-            print("distance", distance)
-            print("distance", 3000000)
-            print("")
+            if chr_cnv_1 != "" and end_cnv_1 != 0:
+                if chromosome == chr_cnv_1 and size >= 10000000:
+                    distance = start - end_cnv_1
+                    if distance <= 3000000:
+                        lst += 1
+                        chr_cnv_1 = chromosome                                           ##### warum = 0 ??
+                        end_cnv_1 = end
+            # if size >= 10000000:
+                # chr_cnv_1 = chromosome
+                # end_cnv_1 = end
+            chr_cnv_1 = chromosome                                       ##### warum = 0 ??
+            end_cnv_1 = end
+            
+                  #      print("")
             print("row", r)
             print("Lst", lst)
-            print("chr_alt ", chr_cnv_1)
-            print("end_cnv ", end_cnv_1)
-            print("start", start)
             print("")
-            
-            if chr_cnv_1 != 0 and end_cnv_1 != 0:
-                if chromosome == chr_cnv_1 and size >= 10000000:
-                distance = start - end_cnv_1
-                    if distance <= 3000000:
-                    lst += 1
-                        chr_cnv_1 = 0
-                        end_cnv_1 = 0
-            if size >= 10000000:
-                chr_cnv_1 = chromosome
-                end_cnv_1 = end
-            else:
-                chr_cnv_1 = 0
-                end_cnv_1 = 0
+
             
 # TAI bestimmen
-            
+            # number of allelic imbalances that spread to the ends of the telomer of the chromosome,but do not cross the centromer
+            # keine sequenzierung der telomere, test ob "ende" des sequenzierten chromosoms erreicht wurde
             # Daten von NCBI (genome browser, GRCh37)            
             
             chr1_end = 249250621
@@ -130,11 +147,11 @@ def read_cnv():
                 tai_calculation(chr9_end)                
             if chromosome == "chr10":
                 tai_calculation(chr10_end)                
-             if chromosome == "chr11":
+            if chromosome == "chr11":
                 tai_calculation(chr11_end)               
             if chromosome == "chr12":
                 tai_calculation(chr12_end)                
-             if chromosome == "chr13":
+            if chromosome == "chr13":
                 tai_calculation(chr13_end)               
             if chromosome == "chr14":
                 tai_calculation(chr14_end)                
@@ -142,13 +159,13 @@ def read_cnv():
                 tai_calculation(chr15_end)                
             if chromosome == "chr16":
                 tai_calculation(chr16_end)                
-             if chromosome == "chr17":
+            if chromosome == "chr17":
                 tai_calculation(chr17_end)               
             if chromosome == "chr18":
                 tai_calculation(chr18_end)                
             if chromosome == "chr19":
                 tai_calculation(chr19_end)                
-             if chromosome == "chr20":
+            if chromosome == "chr20":
                 tai_calculation(chr20_end)               
             if chromosome == "chr21":
                 tai_calculation(chr21_end)                
@@ -161,8 +178,8 @@ def read_cnv():
                
 
 
-	print("HRD_LOH = ", hrd_loh)
-	print("LST = ", lst)
+    print("HRD_LOH = ", hrd_loh)
+    print("LST = ", lst)
     print("TAI = ", tai)
 
 
