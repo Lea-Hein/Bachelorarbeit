@@ -31,8 +31,13 @@ def search_codons():
         b = line[i + 1]
         c = line[i + 2]
         if c == "N":
-            Start_Stop_Positions.write("c == N, {} {} {}, break und starte skript?".format(a,b,c))
-            N_line()
+            if c == "N" and line[len(line)-2] == "N":   #Passt das so???
+                Start_Stop_Positions.write("c == N, {} {} {}, Rest der Zeile == N".format(a,b,c))
+                line = str(fasta.readline())
+                N_line()
+            else:
+                Start_Stop_Positions.write("c == N, {} {} {}, suche weiter nach Codon".format(a,b,c))
+          #  N_line(), b_1 und b_2 duerfen nicht weitergezaehlt werden
         print(a,b,c)
         # print("")
         global pos_a
@@ -58,9 +63,10 @@ def search_codons():
             new_chromosome()
             print("##########################################################################################################################################################################")
 
-        while line[0] == "N" and line[len(line)-1] == "N":
+        while line[0] == "N" and line[len(line)-2] == "N":
             Start_Stop_Positions.write("Line startet und endet mit N, starte SKRIPT\n")
-            N_line
+            line = str(fasta.readline())
+            N_line()
         #    skript()
         if line[0] == ">":
                new_chromosome()
@@ -124,9 +130,10 @@ def search_start(n_1,n_2,n_3,x):
                 sys.exit()
             if line[0] == ">":
                new_chromosome()
-            while line[0] == "N" and line[len(line) -1] == "N":
+            while line[0] == "N" and line[len(line) -2] == "N":
                 Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
             #    skript()
+                line = str(fasta.readline())
                 N_line()
             if line[0] == ">":
                new_chromosome()
@@ -172,10 +179,13 @@ def search_stop(i):
                 a = line[i]
                 b = line[i + 1]
                 c = line[i + 2]
-                if a == "N" or b == "N" or c == "N":
-                    Start_Stop_Positions.write("c == N, {} {} {}, break und return 1\n".format(a,b,c))
-                    Start_Stop_Positions.write("{}\n".format(line))
+                if a == "N" and b == "N" and c == "N":
+                    Start_Stop_Positions.write("a, b und c == N, {} {} {}, break und return 1\n".format(a,b,c))
+
+                    Start_Stop_Positions.write("{}\n".format(line))             ### warum???
                     line = str(fasta.readline())
+                    N_line()
+                    Start_Stop_Positions.write("{}\n".format(line))
                     return 1
                   #  break
                     #skript()
@@ -187,6 +197,8 @@ def search_stop(i):
                         # Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
 
                         # N_line()
+                if a == "N" or b == "N" or c == "N":
+                    Start_Stop_Positions.write("a,b,c = N:  {} {} {}, naechsten codon suchen\n".format(a,b,c))
                 else:
 # SEARCH STOP 1
                     print("SEARCH STOP 1")
@@ -224,14 +236,22 @@ def search_stop(i):
                     if stopcodon > 0:
                         print("stopcodon > 0")
                         break
-        if stopcodon == 0 and line[len(line)-1] =="N":
+# TEst ob druchlauft in chr 9 nachdem N-Sequenz aufgetrete n ist
+        # if line[0] == "N" and line[len(line)-2] == "N":
+                # Start_Stop_Positions.write("Line startet und endet mit N \n")
+                # line = str(fasta.readline())
+                # N_line()
+                # return 1
+        if stopcodon == 0 and line[len(line)-2] =="N":
             return 1
             Start_Stop_Positions.write("zeile endet mit N, Stop suche wird abgebrochen")
             line = str(fasta.readline())
+            N_line()
             if line[0] == ">":
                 new_chromosome()
             while line[0] == "N" and line[len(line) -1] == "N":
-                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                Start_Stop_Positions.write("Line startet mit N und endet mit N, return 1\n")
+                line = str(fasta.readline())
                 N_line()
             return 1    
                 
@@ -246,8 +266,8 @@ def search_stop(i):
             if line[0] == ">":
                 new_chromosome()
             if line[0] == "N":
-                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
-                N_line()
+                Start_Stop_Positions.write("Line startet mit N, return 1\n")
+              #  N_line()
                 return 1
             if line[0] == ">":
                new_chromosome()
@@ -278,7 +298,7 @@ def search_stop(i):
             if line[0] == ">":
                 new_chromosome()
             if line[0] == "N":
-                Start_Stop_Positions.write("Line startet mit N, starte SKRIPT\n")
+                Start_Stop_Positions.write("Line startet mit N,\n")
                 
             if line[0] == ">":
                new_chromosome()
@@ -403,7 +423,12 @@ def new_chromosome():
     Start_Stop_Positions = open("/mnt/share/evaluations/2020_07_08_AHHeinL1_Neoantigens/mantis_test/GRCh37_start_stop_new_{}.txt".format(chr_fa), "w")
     Start_Stop_Positions.write("Chromosome:  {}".format(chr_fa))
     Start_Stop_Positions.write("\n")
-    Start_Stop_Positions.write("#################################################################################################\n")
+    Start_Stop_Positions.write("#####################################################################################################################################\n")
+    print("")
+    print("##########################################################################################################################################################################\n")
+    print("new chromosome", chr_fa)
+    print("")
+    
     Start_Stop_Positions.write("")
             
     line = str(fasta.readline())
@@ -414,16 +439,19 @@ def new_chromosome():
 def N_line():
 
     global b_1
-    b_1 = -1
     global b_2
-    b_2 = -1
     global l
-    l = 0
-    line = str(fasta.readline())
+  #  line = str(fasta.readline())
     i_pos_stop = 0
     b_1 = b_2
     l = len(line)-1
     b_2 = b_2 + l
+    Start_Stop_Positions.write("\n")
+    Start_Stop_Positions.write("B1: {}\n".format(b_1))
+    Start_Stop_Positions.write("B2: {}\n".format(b_2))
+    Start_Stop_Positions.write("{}".format(line))
+    # Start_Stop_Positions.write("zeilenende: {}\n".format(line[len(line) -1]))
+    # Start_Stop_Positions.write("zeilenende: {}\n".format(line[len(line) -2]))
  
  
 def open_fasta():
@@ -470,7 +498,10 @@ def skript():
            break
         if line[0] == ">":
             new_chromosome()
-        while line[0] == "N" and line[len(line)-1] == "N":
+        while line[0] == "N" and line[len(line)-2  ] == "N":                # line[len(line)-2] gibt das letzte zeichen der zeile an
+            Start_Stop_Positions.write("Chromosom startet mit N, skippe Zeilen, bis zu ende")
+            print("Chromosom startet mit N, skippe Zeilen, bis zu ende")
+            line = str(fasta.readline())
             N_line()
         if line[0] == ">":
             new_chromosome()
